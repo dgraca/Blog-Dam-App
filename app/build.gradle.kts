@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.danielgraca.blog_dam_app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.danielgraca.blog_dam_app"
