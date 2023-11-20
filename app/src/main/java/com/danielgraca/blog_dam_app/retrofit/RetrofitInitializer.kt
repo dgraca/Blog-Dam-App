@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  *
  */
 class RetrofitInitializer {
-
-    private val BASE_URL = "http://10.0.2.2:8000/"
     // Solution from
     // https://stackoverflow.com/questions/39918814/use-jsonreader-setlenienttrue-to-accept-malformed-json-at-line-1-column-1-path
     private val gson: Gson = GsonBuilder()
@@ -24,7 +22,7 @@ class RetrofitInitializer {
      * Create a Retrofit instance
      */
     var retrofit: Retrofit? = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl("https://92d7-2001-8a0-dd84-2800-4cc1-7105-3d45-4dd.ngrok-free.app/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
