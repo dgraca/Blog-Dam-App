@@ -3,14 +3,14 @@ package com.danielgraca.blog_dam_app.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.LoginData
-import com.danielgraca.blog_dam_app.model.UserAuth
+import com.danielgraca.blog_dam_app.model.AuthResponse
+import com.danielgraca.blog_dam_app.model.RegisterData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,11 +67,6 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun validateToken(token: String) {
-
-    }
-
     /**
      * Toggle between login and registration UI
      */
@@ -101,6 +96,13 @@ class AuthActivity : AppCompatActivity() {
     }
 
     /**
+     * Get token from shared preferences
+     */
+    private fun getToken(): String? {
+        return getSharedPreferences("AUTH", MODE_PRIVATE).getString("TOKEN", null)
+    }
+
+    /**
      * Store token in shared preferences
      */
     private fun storeToken(token: String) {
@@ -113,13 +115,6 @@ class AuthActivity : AppCompatActivity() {
         // Store token in shared preferences
         editor.putString("TOKEN", token)
         editor.apply()
-    }
-
-    /**
-     * Get token from shared preferences
-     */
-    private fun getToken(): String? {
-        return getSharedPreferences("AUTH", MODE_PRIVATE).getString("TOKEN", null)
     }
 
     /**
@@ -136,7 +131,6 @@ class AuthActivity : AppCompatActivity() {
         editor.remove("TOKEN")
         editor.apply()
     }
-
 
     private fun errorMessage(msg: String, code: Int = 0) {
         tvErrorMessage.text = msg
@@ -164,8 +158,8 @@ class AuthActivity : AppCompatActivity() {
         // Get reference to API
         val call = RetrofitInitializer().userAuthService()?.login(data)
 
-        call?.enqueue(object : Callback<UserAuth?> {
-            override fun onResponse(call: Call<UserAuth?>, response: Response<UserAuth?>) {
+        call?.enqueue(object : Callback<AuthResponse?> {
+            override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
                 if (response.isSuccessful) {
                     // Get response body
                     val userAuth = response.body()
@@ -190,7 +184,62 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<UserAuth?>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
+                errorMessage("Critical error: ${t.cause}", 1)
+            }
+        })
+    }
+
+    /**
+     * Perform register action
+     */
+    private fun register() {
+        // clear error messages
+        tvNameError.visibility = View.GONE
+        tvEmailError.visibility = View.GONE
+        tvPasswordError.visibility = View.GONE
+
+        // clear error message
+        errorMessage("")
+
+        // Create Login object
+        val data = RegisterData(
+            etName.text.toString(),
+            etEmail.text.toString(),
+            etPassword.text.toString(),
+            etConfirmPassword.text.toString()
+        )
+
+        // Get reference to API
+        val call = RetrofitInitializer().userAuthService()?.register(data)
+
+        call?.enqueue(object : Callback<AuthResponse?> {
+            override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
+                if (response.isSuccessful) {
+                    // Get response body
+                    val userAuth = response.body()
+
+                    // If there is a token, store it and go to main activity
+                    userAuth?.token?.let { token ->
+                        storeToken(token)
+                        goToMainActivity()
+                    }
+
+                    // Check if there is a message and display it
+                    userAuth?.message?.let { message ->
+                        errorMessage(message, 1)
+                    }
+
+                    // Check if there are errors and display them
+                    userAuth?.errors?.let { errors ->
+                        handleErrors(errors)
+                    }
+                } else {
+                    errorMessage("Error: ${response.code()}", 1)
+                }
+            }
+
+            override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
                 errorMessage("Critical error: ${t.cause}", 1)
             }
         })
@@ -233,7 +282,9 @@ class AuthActivity : AppCompatActivity() {
         if (isLoginMode()) {
             login()
         } else {
-            // register()
+            // make sure there is no token in shared preferences
+            clearToken()
+            register()
         }
     }
 }
