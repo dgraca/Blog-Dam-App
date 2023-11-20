@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_page">Página principal</string>
+    <string name="user_page">Perfil</string>
+    <string name="about_page">Sobre mim</string>
+    <string name="logout">Sair da conta</string>
+    <string name="open_navigation">Abrir barra lateral</string>
+    <string name="close_navigation">Fechar barra lateral</string>
+    <string name="navigation_username">Default name</string>
+    <string name="navigation_email">default@email.com</string>
+</resources>

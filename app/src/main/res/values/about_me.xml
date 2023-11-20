@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="school_year">2023/24</string>
+    <string name="school_class">Desenvolvimento de aplicações móveis</string>
+    <string name="course">Licenciatura em Engenharia Informática</string>
+    <string name="student_number">N.º 20948 | aluno20948@ipt.pt</string>
+    <string name="author">Daniel Graça</string>
+</resources>

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.LoginData
 import com.danielgraca.blog_dam_app.model.AuthResponse
@@ -53,6 +54,10 @@ class AuthActivity : AppCompatActivity() {
         // Set click listeners
         btnAction.setOnClickListener { performAction() }
         tvToggleMode.setOnClickListener { toggleMode() }
+
+        // Initialize and set the toolbar
+        val toolbar = findViewById<Toolbar>(R.id.auth_toolbar)
+        setSupportActionBar(toolbar)
     }
 
     /**
