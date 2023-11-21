@@ -3,13 +3,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".ui.fragment.UserFragment">
 
     <TextView
+        android:id="@+id/tvEditUserTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Fragment"
+        android:text="@string/edit_title"
         android:textSize="24sp"
-        android:layout_centerInParent="true"/>
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Username -->
+    <TextView
+        android:id="@+id/tvEditUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_username"
+        android:textSize="18sp"
+        android:layout_below="@id/tvEditUserTitle" />
+
+    <EditText
+        android:id="@+id/etEditUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvEditUserName"
+        android:layout_marginTop="8dp"
+        android:hint="@string/edit_username" />
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/tvEditEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_email"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/etEditUserName" />
+
+    <EditText
+        android:id="@+id/etEditEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvEditEmail"
+        android:layout_marginTop="8dp"
+        android:hint="@string/edit_email" />
+
+    <!-- Password -->
+    <TextView
+        android:id="@+id/tvEditPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editpassword"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/etEditEmail" />
+
+    <EditText
+        android:id="@+id/etEditPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvEditPassword"
+        android:layout_marginTop="8dp"
+        android:hint="@string/editpassword" />
+
+    <Button
+        android:id="@+id/btnEditUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etEditPassword"
+        android:layout_marginTop="16dp"
+        android:text="@string/edit_action"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

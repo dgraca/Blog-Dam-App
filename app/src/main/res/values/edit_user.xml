@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit_title">Editar perfil</string>
+    <string name="edit_username">Nome:</string>
+    <string name="edit_email">Email:</string>
+    <string name="editpassword">Palavra-passe:</string>
+    <string name="edit_action">Editar</string>
+</resources>
