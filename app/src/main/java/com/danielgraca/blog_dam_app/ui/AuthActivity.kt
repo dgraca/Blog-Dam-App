@@ -13,6 +13,7 @@ import com.danielgraca.blog_dam_app.model.LoginData
 import com.danielgraca.blog_dam_app.model.AuthResponse
 import com.danielgraca.blog_dam_app.model.RegisterData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
+import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +31,7 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var tvNameError: TextView;
     private lateinit var tvEmailError: TextView;
     private lateinit var tvPasswordError: TextView;
+    private lateinit var sharedPreferences: SharedPreferencesUtils;
 
     /**
      * Called when the activity is starting
@@ -58,6 +60,10 @@ class AuthActivity : AppCompatActivity() {
         // Initialize and set the toolbar
         val toolbar = findViewById<Toolbar>(R.id.auth_toolbar)
         setSupportActionBar(toolbar)
+
+        // Initialize shared preferences utils
+        sharedPreferences = SharedPreferencesUtils
+        sharedPreferences.init(this, "AUTH")
     }
 
     /**
@@ -67,7 +73,7 @@ class AuthActivity : AppCompatActivity() {
         super.onStart()
 
         // Check if there is a token
-        if (getToken() != null) {
+        if (sharedPreferences.get("TOKEN") != null) {
             goToMainActivity()
         }
     }
@@ -98,43 +104,6 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun goToMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
-    }
-
-    /**
-     * Get token from shared preferences
-     */
-    private fun getToken(): String? {
-        return getSharedPreferences("AUTH", MODE_PRIVATE).getString("TOKEN", null)
-    }
-
-    /**
-     * Store token in shared preferences
-     */
-    private fun storeToken(token: String) {
-        // Get reference to shared preferences
-        val sharedPref = getSharedPreferences("AUTH", MODE_PRIVATE)
-
-        // Get reference to editor
-        val editor = sharedPref.edit()
-
-        // Store token in shared preferences
-        editor.putString("TOKEN", token)
-        editor.apply()
-    }
-
-    /**
-     * Clear token from shared preferences
-     */
-    private fun clearToken() {
-        // Get reference to shared preferences
-        val sharedPref = getSharedPreferences("AUTH", MODE_PRIVATE)
-
-        // Get reference to editor
-        val editor = sharedPref.edit()
-
-        // Clear token from shared preferences
-        editor.remove("TOKEN")
-        editor.apply()
     }
 
     private fun errorMessage(msg: String, code: Int = 0) {
@@ -171,7 +140,7 @@ class AuthActivity : AppCompatActivity() {
 
                     // If there is a token, store it and go to main activity
                     userAuth?.token?.let { token ->
-                        storeToken(token)
+                        sharedPreferences.store("TOKEN", token)
                         goToMainActivity()
                     }
 
@@ -226,7 +195,7 @@ class AuthActivity : AppCompatActivity() {
 
                     // If there is a token, store it and go to main activity
                     userAuth?.token?.let { token ->
-                        storeToken(token)
+                        sharedPreferences.store("TOKEN", token)
                         goToMainActivity()
                     }
 
@@ -288,7 +257,7 @@ class AuthActivity : AppCompatActivity() {
             login()
         } else {
             // make sure there is no token in shared preferences
-            clearToken()
+            sharedPreferences.clear("TOKEN")
             register()
         }
     }

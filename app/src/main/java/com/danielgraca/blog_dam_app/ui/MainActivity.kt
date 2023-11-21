@@ -5,16 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.UserData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
+import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +29,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var sharedPreferences: SharedPreferencesUtils;
 
     /**
      * Called when the activity is starting
@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             replaceFragment(HomeFragment())
             navigationView.setCheckedItem(R.id.navigation_home)
         }
+
+        // Initialize shared preferences utils
+        sharedPreferences = SharedPreferencesUtils
+        sharedPreferences.init(this, "AUTH")
     }
 
     /**
@@ -123,7 +127,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Get user data
      */
     private fun getUserData() {
-        val token = "Bearer ${getToken()}"
+        val token = "Bearer ${sharedPreferences.get("TOKEN")}"
         Log.d("TOKEN", token)
 
         // Get reference to API
@@ -148,28 +152,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     /**
-     * Get token from shared preferences
-     */
-    private fun getToken(): String? {
-        return getSharedPreferences("AUTH", MODE_PRIVATE).getString("TOKEN", null)
-    }
-
-    /**
-     * Clear token from shared preferences
-     */
-    private fun clearToken() {
-        // Get reference to shared preferences
-        val sharedPref = getSharedPreferences("AUTH", MODE_PRIVATE)
-
-        // Get reference to editor
-        val editor = sharedPref.edit()
-
-        // Clear token from shared preferences
-        editor.remove("TOKEN")
-        editor.apply()
-    }
-
-    /**
      * Go to auth activity
      */
     private fun goToAuthActivity() {
@@ -181,7 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Logout
      */
     private fun logout() {
-        clearToken()
+        sharedPreferences.clear("TOKEN")
         goToAuthActivity()
     }
 }
