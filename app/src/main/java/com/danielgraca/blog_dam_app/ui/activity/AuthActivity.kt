@@ -1,4 +1,4 @@
-package com.danielgraca.blog_dam_app.ui
+package com.danielgraca.blog_dam_app.ui.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

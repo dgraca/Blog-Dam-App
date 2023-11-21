@@ -1,4 +1,4 @@
-package com.danielgraca.blog_dam_app.ui
+package com.danielgraca.blog_dam_app.ui.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.UserData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
+import com.danielgraca.blog_dam_app.ui.fragment.AboutMeFragment
+import com.danielgraca.blog_dam_app.ui.fragment.HomeFragment
+import com.danielgraca.blog_dam_app.ui.fragment.UserFragment
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call

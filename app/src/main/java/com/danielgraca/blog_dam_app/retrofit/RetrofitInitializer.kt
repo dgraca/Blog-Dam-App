@@ -21,8 +21,8 @@ class RetrofitInitializer {
     /**
      * Create a Retrofit instance
      */
-    var retrofit: Retrofit? = Retrofit.Builder()
-        .baseUrl("https://92d7-2001-8a0-dd84-2800-4cc1-7105-3d45-4dd.ngrok-free.app/")
+    private var retrofit: Retrofit? = Retrofit.Builder()
+        .baseUrl("https://8763-2001-8a0-dd84-2800-3032-ee47-4614-11b.ngrok-free.app/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 

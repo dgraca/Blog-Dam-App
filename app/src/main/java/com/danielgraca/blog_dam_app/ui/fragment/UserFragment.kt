@@ -1,4 +1,4 @@
-package com.danielgraca.blog_dam_app.ui
+package com.danielgraca.blog_dam_app.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.danielgraca.blog_dam_app.R
 
-class HomeFragment : Fragment() {
+class UserFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_user, container, false)
     }
 }
