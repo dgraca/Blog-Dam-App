@@ -30,13 +30,6 @@ interface UserAuthService {
     fun register(@Body body: RegisterData): Call<AuthResponse>
 
     /**
-     * Send a GET request to the server to get the user data
-     */
-    @GET("api/user")
-    @Headers("Accept: application/json")
-    fun getUserData(@Header("Authorization") token: String): Call<UserData>
-
-    /**
      * Send a POST request to the server to logout the user
      */
     @GET("api/logout")

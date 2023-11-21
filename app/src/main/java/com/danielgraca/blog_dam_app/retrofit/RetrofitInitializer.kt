@@ -1,6 +1,7 @@
 package com.danielgraca.blog_dam_app.retrofit
 
 import com.danielgraca.blog_dam_app.retrofit.service.UserAuthService
+import com.danielgraca.blog_dam_app.retrofit.service.UserDataService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -26,6 +27,9 @@ class RetrofitInitializer {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
+    // Create a service for each endpoint for the authentication service
     fun userAuthService() = retrofit?.create(UserAuthService::class.java)
+    // Create a service for each endpoint for the user data service
+    fun userDataService() = retrofit?.create(UserDataService::class.java)
 
 }

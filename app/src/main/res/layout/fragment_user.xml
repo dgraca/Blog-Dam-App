@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvEditPassword"
         android:layout_marginTop="8dp"
+        android:inputType="textPassword"
         android:hint="@string/editpassword" />
 
     <Button

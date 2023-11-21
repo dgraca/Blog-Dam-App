@@ -178,10 +178,10 @@ class AuthActivity : AppCompatActivity() {
 
         // Create Login object
         val data = RegisterData(
-            etName.text.toString(),
-            etEmail.text.toString(),
-            etPassword.text.toString(),
-            etConfirmPassword.text.toString()
+            name = etName.text.toString(),
+            email = etEmail.text.toString(),
+            password = etPassword.text.toString(),
+            passwordConfirmation = etConfirmPassword.text.toString()
         )
 
         // Get reference to API
