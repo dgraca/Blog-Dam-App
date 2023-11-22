@@ -3,6 +3,13 @@
     <string name="edit_title">Editar perfil</string>
     <string name="edit_username">Nome:</string>
     <string name="edit_email">Email:</string>
-    <string name="editpassword">Palavra-passe:</string>
+    <string name="edit_password">Palavra-passe:</string>
     <string name="edit_action">Editar</string>
+    <string name="edit_delete_action">Eliminar conta</string>
+
+    <!--  Delete user dialog  -->
+    <string name="delete_dialog_title">Eliminar conta</string>
+    <string name="delete_dialog_supporting_text">Tem a certeza que pertende eliminar a sua conta? Esta ação é irreversível.</string>
+    <string name="delete_dialog_decline">Cancelar</string>
+    <string name="delete_dialog_accept">Sim, eliminar</string>
 </resources>

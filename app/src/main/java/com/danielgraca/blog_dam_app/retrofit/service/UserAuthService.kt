@@ -1,9 +1,8 @@
 package com.danielgraca.blog_dam_app.retrofit.service
 
-import com.danielgraca.blog_dam_app.model.LoginData
-import com.danielgraca.blog_dam_app.model.AuthResponse
-import com.danielgraca.blog_dam_app.model.RegisterData
-import com.danielgraca.blog_dam_app.model.UserData
+import com.danielgraca.blog_dam_app.model.data.LoginData
+import com.danielgraca.blog_dam_app.model.response.AuthResponse
+import com.danielgraca.blog_dam_app.model.data.RegisterData
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

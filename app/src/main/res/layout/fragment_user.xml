@@ -3,78 +3,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     tools:context=".ui.fragment.UserFragment">
 
-    <TextView
-        android:id="@+id/tvEditUserTitle"
-        android:layout_width="wrap_content"
+    <!--  Title  -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mtvEditTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/edit_title"
         android:textSize="24sp"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Username -->
-    <TextView
-        android:id="@+id/tvEditUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/edit_username"
-        android:textSize="18sp"
-        android:layout_below="@id/tvEditUserTitle" />
-
-    <EditText
-        android:id="@+id/etEditUserName"
+    <!--  Name     -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEditName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvEditUserName"
-        android:layout_marginTop="8dp"
-        android:hint="@string/edit_username" />
+        android:hint="@string/edit_username"
+        android:layout_below="@+id/mtvEditTitle"
+        android:layout_marginBottom="8dp"
+        app:errorEnabled="true">
 
-    <!-- Email -->
-    <TextView
-        android:id="@+id/tvEditEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/edit_email"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/etEditUserName" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etEditEmail"
+    <!--  Email     -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEditEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvEditEmail"
-        android:layout_marginTop="8dp"
-        android:hint="@string/edit_email" />
+        android:hint="@string/edit_email"
+        android:layout_below="@+id/tilEditName"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="8dp"
+        app:errorEnabled="true">
 
-    <!-- Password -->
-    <TextView
-        android:id="@+id/tvEditPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/editpassword"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/etEditEmail" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etEditPassword"
+    <!--  Password     -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEditPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvEditPassword"
-        android:layout_marginTop="8dp"
-        android:inputType="textPassword"
-        android:hint="@string/editpassword" />
+        android:hint="@string/edit_password"
+        android:layout_below="@+id/tilEditEmail"
+        app:endIconMode="password_toggle"
+        android:layout_marginBottom="8dp"
+        app:errorEnabled="true">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--  Edit Button   -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnEditUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tilEditPassword"
+        android:text="@string/edit_action" />
+
+    <!--  Delete Floating Action Button   -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabDeleteUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etEditPassword"
-        android:layout_marginTop="16dp"
-        android:text="@string/edit_action"
-        android:layout_centerHorizontal="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/edit_delete_action"
+        app:icon="@drawable/baseline_delete_outline_24" />
+
 
 </RelativeLayout>

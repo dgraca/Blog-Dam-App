@@ -1,4 +1,4 @@
-package com.danielgraca.blog_dam_app.model
+package com.danielgraca.blog_dam_app.model.response
 
 import com.google.gson.annotations.SerializedName
 

@@ -3,12 +3,11 @@ package com.danielgraca.blog_dam_app.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.LoginData
-import com.danielgraca.blog_dam_app.model.AuthResponse
-import com.danielgraca.blog_dam_app.model.RegisterData
+import com.danielgraca.blog_dam_app.model.data.LoginData
+import com.danielgraca.blog_dam_app.model.response.AuthResponse
+import com.danielgraca.blog_dam_app.model.data.RegisterData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.appbar.MaterialToolbar
