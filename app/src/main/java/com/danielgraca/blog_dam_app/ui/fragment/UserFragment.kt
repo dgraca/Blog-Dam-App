@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.UserEditData
 import com.danielgraca.blog_dam_app.model.response.ErrorResponse
@@ -31,6 +33,7 @@ class UserFragment : Fragment() {
     private lateinit var tilEditPassword: TextInputLayout
     private lateinit var btnEditUser: MaterialButton
     private lateinit var btnDeleteUser: ExtendedFloatingActionButton
+    private lateinit var tvUpdateErrorMessage: TextView
     private lateinit var sharedPreferences: SharedPreferencesUtils
 
     /**
@@ -55,6 +58,7 @@ class UserFragment : Fragment() {
         tilEditEmail = view.findViewById(R.id.tilEditEmail)
         tilEditPassword = view.findViewById(R.id.tilEditPassword)
         btnEditUser = view.findViewById(R.id.btnEditUser)
+        tvUpdateErrorMessage = view.findViewById(R.id.tvUpdateErrorMessage)
         btnDeleteUser = view.findViewById(R.id.fabDeleteUser)
 
         // Initialize shared preferences utils
@@ -67,6 +71,39 @@ class UserFragment : Fragment() {
         // Set click listeners
         btnEditUser.setOnClickListener { updateUserData() }
         btnDeleteUser.setOnClickListener { showDeleteDialog() }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilEditUserName.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilEditUserName.error = null
+            tvUpdateErrorMessage.visibility = View.GONE
+            tvUpdateErrorMessage.text = null
+        }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilEditEmail.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilEditEmail.error = null
+            tvUpdateErrorMessage.visibility = View.GONE
+            tvUpdateErrorMessage.text = null
+        }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilEditPassword.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilEditPassword.error = null
+            tvUpdateErrorMessage.visibility = View.GONE
+            tvUpdateErrorMessage.text = null
+        }
     }
 
     /**
@@ -141,10 +178,10 @@ class UserFragment : Fragment() {
      * Update user data
      */
     private fun updateUserData() {
-        // hide errors
-        tilEditUserName.error = null
-        tilEditEmail.error = null
-        tilEditPassword.error = null
+        // clear errors
+        clearErrors()
+        // clear focus
+        clearFocus()
 
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
@@ -178,7 +215,7 @@ class UserFragment : Fragment() {
                     // parse error body to UserEditErrorResponse
                     val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                     // handle errors
-                    handleUpdateErrors(errorResponse.errors)
+                    handleUpdateErrors(errorResponse)
                 }
             }
 
@@ -189,32 +226,60 @@ class UserFragment : Fragment() {
     }
 
     /**
+     * Clear errors
+     */
+    private fun clearErrors() {
+        tilEditUserName.error = null
+        tilEditEmail.error = null
+        tilEditPassword.error = null
+        tvUpdateErrorMessage.visibility = View.GONE
+        tvUpdateErrorMessage.text = null
+    }
+
+    /**
+     * Clear focus
+     */
+    private fun clearFocus() {
+        tilEditUserName.clearFocus()
+        tilEditEmail.clearFocus()
+        tilEditPassword.clearFocus()
+    }
+
+    /**
      * Handle update errors
      */
-    private fun handleUpdateErrors(errors: Map<String, List<String>>) {
-        // loop through errors
-        for ((key, value) in errors) {
-            // check if key is name
-            if (key == "name") {
-                // loop through name errors and append errors to error message
-                for (error in value) {
-                    tilEditUserName.error = error
-                }
-            }
+    private fun handleUpdateErrors(errorBody: ErrorResponse) {
+        // check if there is a message error
+        if (errorBody.message != null) {
+            tvUpdateErrorMessage.text = errorBody.message
+            tvUpdateErrorMessage.visibility = View.VISIBLE
+        }
 
-            // check if key is email
-            if (key == "email") {
-                // loop through email errors and append errors to error message
-                for (error in value) {
-                    tilEditEmail.error = error
+        if (errorBody.errors != null) {
+            // loop through errors
+            for ((key, value) in errorBody.errors) {
+                // check if key is name
+                if (key == "name") {
+                    // loop through name errors and append errors to error message
+                    for (error in value) {
+                        tilEditUserName.error = error
+                    }
                 }
-            }
 
-            // check if key is password
-            if (key == "password") {
-                // loop through password errors and append errors to error message
-                for (error in value) {
-                    tilEditPassword.error = error
+                // check if key is email
+                if (key == "email") {
+                    // loop through email errors and append errors to error message
+                    for (error in value) {
+                        tilEditEmail.error = error
+                    }
+                }
+
+                // check if key is password
+                if (key == "password") {
+                    // loop through password errors and append errors to error message
+                    for (error in value) {
+                        tilEditPassword.error = error
+                    }
                 }
             }
         }

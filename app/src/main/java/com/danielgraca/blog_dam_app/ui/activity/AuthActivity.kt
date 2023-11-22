@@ -129,6 +129,8 @@ class AuthActivity : AppCompatActivity() {
     private fun toggleMode() {
         // clear errors
         clearErrors()
+        clearFields()
+        clearFocus()
 
         if (isLoginMode()) {
             // Switch to registration mode
@@ -311,6 +313,26 @@ class AuthActivity : AppCompatActivity() {
     }
 
     /**
+     * Clear fields
+     */
+    private fun clearFields() {
+        tilName.editText?.text = null
+        tilEmail.editText?.text = null
+        tilPassword.editText?.text = null
+        tilConfirmPassword.editText?.text = null
+    }
+
+    /**
+     * Clear focus
+     */
+    private fun clearFocus() {
+        tilName.clearFocus()
+        tilEmail.clearFocus()
+        tilPassword.clearFocus()
+        tilConfirmPassword.clearFocus()
+    }
+
+    /**
      * Determine if the fragment is in login mode based on UI state
      *
      * @return true if the fragment is in login mode, false otherwise
@@ -325,6 +347,8 @@ class AuthActivity : AppCompatActivity() {
     private fun performAction() {
         // clear errors
         clearErrors()
+        // clear focus
+        clearFocus()
 
         if (isLoginMode()) {
             login()
