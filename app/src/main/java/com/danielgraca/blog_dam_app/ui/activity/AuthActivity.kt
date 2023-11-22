@@ -3,9 +3,12 @@ package com.danielgraca.blog_dam_app.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.LoginData
 import com.danielgraca.blog_dam_app.model.response.AuthResponse
@@ -49,6 +52,50 @@ class AuthActivity : AppCompatActivity() {
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword)
         tvAuthError = findViewById(R.id.tvAuthError)
         mtvToggleMode = findViewById(R.id.mtvToggleMode)
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilName.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilName.error = null
+            tvAuthError.visibility = View.GONE
+            tvAuthError.text = null
+        }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilEmail.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilEmail.error = null
+            tvAuthError.visibility = View.GONE
+            tvAuthError.text = null
+        }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilPassword.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilPassword.error = null
+            tvAuthError.visibility = View.GONE
+            tvAuthError.text = null
+        }
+
+        /**
+         * Clear errors when user starts typing
+         *
+         * _ is a placeholder for unused parameters
+         */
+        tilConfirmPassword.editText?.doBeforeTextChanged { _, _, _, _ ->
+            tilConfirmPassword.error = null
+            tvAuthError.visibility = View.GONE
+            tvAuthError.text = null
+        }
 
 
         // Set click listeners
