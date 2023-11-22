@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -36,23 +37,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--   Name error message     -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtvNameError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text=""
-            android:textColor="#ef4444"
-            android:textStyle="italic"
-            android:visibility="gone" />
-
         <!--   Email     -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email">
+            android:hint="@string/email"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -62,24 +53,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--   Email error message     -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtvEmailError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text=""
-            android:textColor="#ef4444"
-            android:textStyle="italic"
-            android:visibility="gone" />
-
         <!--   Password     -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            app:endIconMode="password_toggle">
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -89,17 +70,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--   Password error message     -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtvPasswordError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text=""
-            android:textColor="#ef4444"
-            android:textStyle="italic"
-            android:visibility="gone" />
-
         <!--   Confirm Password     -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilConfirmPassword"
@@ -107,7 +77,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             app:endIconMode="password_toggle"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -123,8 +94,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/tvAuthError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F44336"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
         <!--   Toggle mode (login/register)     -->
         <com.google.android.material.textview.MaterialTextView
@@ -134,15 +113,6 @@
             android:text="@string/switch_to_register"
             android:textSize="18sp"
             android:padding="4dp"/>
-
-        <!--   Generic Error message     -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtvErrorMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="#ef4444"
-            android:textStyle="italic"
-            android:visibility="gone" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.data.UserEditData
 import com.danielgraca.blog_dam_app.model.response.UserEditResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.fragment.AboutMeFragment
@@ -33,7 +32,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var sharedPreferences: SharedPreferencesUtils;
+    private lateinit var sharedPreferences: SharedPreferencesUtils
 
     /**
      * Called when the activity is starting

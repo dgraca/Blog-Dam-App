@@ -3,17 +3,21 @@ package com.danielgraca.blog_dam_app.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.LoginData
 import com.danielgraca.blog_dam_app.model.response.AuthResponse
 import com.danielgraca.blog_dam_app.model.data.RegisterData
+import com.danielgraca.blog_dam_app.model.response.ErrorResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,17 +25,14 @@ import retrofit2.Response
 class AuthActivity : AppCompatActivity() {
 
     // UI elements
-    private lateinit var btnAction: MaterialButton;
-    private lateinit var tilName: TextInputLayout;
-    private lateinit var tilEmail: TextInputLayout;
-    private lateinit var tilPassword: TextInputLayout;
-    private lateinit var tilConfirmPassword: TextInputLayout;
-    private lateinit var mtvToggleMode: MaterialTextView;
-    private lateinit var mtvErrorMessage: MaterialTextView;
-    private lateinit var mtvNameError: MaterialTextView;
-    private lateinit var mtvEmailError: MaterialTextView;
-    private lateinit var mtvPasswordError: MaterialTextView;
-    private lateinit var sharedPreferences: SharedPreferencesUtils;
+    private lateinit var btnAction: MaterialButton
+    private lateinit var tilName: TextInputLayout
+    private lateinit var tilEmail: TextInputLayout
+    private lateinit var tilPassword: TextInputLayout
+    private lateinit var tilConfirmPassword: TextInputLayout
+    private lateinit var tvAuthError: TextView
+    private lateinit var mtvToggleMode: MaterialTextView
+    private lateinit var sharedPreferences: SharedPreferencesUtils
 
     /**
      * Called when the activity is starting
@@ -46,11 +47,8 @@ class AuthActivity : AppCompatActivity() {
         tilEmail = findViewById(R.id.tilEmail)
         tilPassword = findViewById(R.id.tilPassword)
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword)
+        tvAuthError = findViewById(R.id.tvAuthError)
         mtvToggleMode = findViewById(R.id.mtvToggleMode)
-        mtvErrorMessage = findViewById(R.id.mtvErrorMessage)
-        mtvNameError = findViewById(R.id.mtvNameError)
-        mtvEmailError = findViewById(R.id.mtvEmailError)
-        mtvPasswordError = findViewById(R.id.mtvPasswordError)
 
 
         // Set click listeners
@@ -82,6 +80,9 @@ class AuthActivity : AppCompatActivity() {
      * Toggle between login and registration UI
      */
     private fun toggleMode() {
+        // clear errors
+        clearErrors()
+
         if (isLoginMode()) {
             // Switch to registration mode
             tilName.visibility = View.VISIBLE
@@ -106,23 +107,10 @@ class AuthActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
-    private fun errorMessage(msg: String, code: Int = 0) {
-        mtvErrorMessage.text = msg
-        mtvErrorMessage.visibility = if (code == 1) View.VISIBLE else View.GONE
-    }
-
     /**
      * Perform login action
      */
     private fun login() {
-        // clear error messages
-        mtvNameError.visibility = View.GONE
-        mtvEmailError.visibility = View.GONE
-        mtvPasswordError.visibility = View.GONE
-
-        // clear error message
-        errorMessage("")
-
         // Create Login object
         val data = LoginData(
             tilEmail.editText?.text.toString(),
@@ -144,38 +132,80 @@ class AuthActivity : AppCompatActivity() {
                         goToMainActivity()
                     }
 
-                    // Check if there is a message and display it
-                    userAuth?.message?.let { message ->
-                        errorMessage(message, 1)
-                    }
+                    return
+                }
 
-                    // Check if there are errors and display them
-                    userAuth?.errors?.let { errors ->
-                        handleErrors(errors)
-                    }
-                } else {
-                    errorMessage("Error: ${response.code()}", 1)
+                // unauthorized or unprocessable content
+                if (response.code() == 401 || response.code() == 422) {
+                    /** Request is invalid, handle errors **/
+                    // get error body
+                    val errorBody = response.errorBody()?.string()
+                    // parse error body to UserEditErrorResponse
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+
+                    // handle errors
+                    handleErrors(errorResponse)
                 }
             }
 
             override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
-                errorMessage("Critical error: ${t.cause}", 1)
+                //
             }
         })
+    }
+
+    /**
+     * Handle update errors
+     */
+    private fun handleErrors(errorBody: ErrorResponse) {
+        // check if there is a message error
+        if (errorBody.message != null) {
+            tvAuthError.visibility = View.VISIBLE
+            tvAuthError.text = errorBody.message
+        }
+
+        if (errorBody.errors != null) {
+            // loop through errors
+            for ((key, value) in errorBody.errors) {
+                // check if key is name
+                if (key == "name") {
+                    // loop through name errors and append errors to error message
+                    for (error in value) {
+                        tilName.error = error
+                    }
+                }
+
+                // check if key is email
+                if (key == "email") {
+                    // loop through email errors and append errors to error message
+                    for (error in value) {
+                        tilEmail.error = error
+                    }
+                }
+
+                // check if key is password
+                if (key == "password") {
+                    // loop through password errors and append errors to error message
+                    for (error in value) {
+                        tilPassword.error = error
+                    }
+                }
+
+                // check if key is password_confirmation
+                if (key == "password") {
+                    // loop through password errors and append errors to error message
+                    for (error in value) {
+                        tilConfirmPassword.error = error
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Perform register action
      */
     private fun register() {
-        // clear error messages
-        mtvNameError.visibility = View.GONE
-        mtvEmailError.visibility = View.GONE
-        mtvPasswordError.visibility = View.GONE
-
-        // clear error message
-        errorMessage("")
-
         // Create Login object
         val data = RegisterData(
             name = tilName.editText?.text.toString(),
@@ -199,45 +229,38 @@ class AuthActivity : AppCompatActivity() {
                         goToMainActivity()
                     }
 
-                    // Check if there is a message and display it
-                    userAuth?.message?.let { message ->
-                        errorMessage(message, 1)
-                    }
+                    return
+                }
 
-                    // Check if there are errors and display them
-                    userAuth?.errors?.let { errors ->
-                        handleErrors(errors)
-                    }
-                } else {
-                    errorMessage("Error: ${response.code()}", 1)
+                // unauthorized or unprocessable content
+                if (response.code() == 401 || response.code() == 422) {
+                    // Request is invalid, handle errors
+                    // get error body
+                    val errorBody = response.errorBody()?.string()
+                    // parse error body to UserEditErrorResponse
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+
+                    // handle errors
+                    handleErrors(errorResponse)
                 }
             }
 
             override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
-                errorMessage("Critical error: ${t.cause}", 1)
+                //
             }
         })
     }
 
     /**
-     * Handle auth request errors
+     * Clear errors
      */
-    private fun handleErrors(errors: Map<String, List<String>>) {
-        errors.forEach { (field, errorList) ->
-            if (field == "name") {
-                mtvNameError.text = errorList[0]
-                mtvNameError.visibility = View.VISIBLE
-            } else if (field == "email") {
-                mtvEmailError.text = errorList[0]
-                mtvEmailError.visibility = View.VISIBLE
-            } else if (field == "password") {
-                mtvPasswordError.text = errorList[0]
-                mtvPasswordError.visibility = View.VISIBLE
-            }
-            errorList.forEach { error ->
-                println("  Error: $error")
-            }
-        }
+    private fun clearErrors() {
+        tilName.error = null
+        tilEmail.error = null
+        tilPassword.error = null
+        tilConfirmPassword.error = null
+        tvAuthError.visibility = View.GONE
+        tvAuthError.text = null
     }
 
     /**
@@ -253,11 +276,12 @@ class AuthActivity : AppCompatActivity() {
      * Perform login or registration action based on UI state
      */
     private fun performAction() {
+        // clear errors
+        clearErrors()
+
         if (isLoginMode()) {
             login()
         } else {
-            // make sure there is no token in shared preferences
-            sharedPreferences.clear("TOKEN")
             register()
         }
     }

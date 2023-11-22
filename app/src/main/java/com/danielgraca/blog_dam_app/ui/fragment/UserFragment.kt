@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.UserEditData
-import com.danielgraca.blog_dam_app.model.response.UserEditErrorResponse
+import com.danielgraca.blog_dam_app.model.response.ErrorResponse
 import com.danielgraca.blog_dam_app.model.response.UserEditResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
@@ -161,7 +161,6 @@ class UserFragment : Fragment() {
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
-                Log.d("RESPONSE", response.body().toString())
                 if (response.isSuccessful) {
                     // set edit_username with name from response
                     tilEditUserName.editText?.setText(response.body()!!.name)
@@ -177,7 +176,7 @@ class UserFragment : Fragment() {
                     // get error body
                     val errorBody = response.errorBody()?.string()
                     // parse error body to UserEditErrorResponse
-                    val errorResponse = Gson().fromJson(errorBody, UserEditErrorResponse::class.java)
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                     // handle errors
                     handleUpdateErrors(errorResponse.errors)
                 }
