@@ -3,17 +3,18 @@ package com.danielgraca.blog_dam_app.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.LoginData
 import com.danielgraca.blog_dam_app.model.AuthResponse
 import com.danielgraca.blog_dam_app.model.RegisterData
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textview.MaterialTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,16 +22,16 @@ import retrofit2.Response
 class AuthActivity : AppCompatActivity() {
 
     // UI elements
-    private lateinit var btnAction: Button;
-    private lateinit var etName: EditText;
-    private lateinit var etEmail: EditText;
-    private lateinit var etPassword: EditText;
-    private lateinit var etConfirmPassword: EditText;
-    private lateinit var tvToggleMode: TextView;
-    private lateinit var tvErrorMessage: TextView;
-    private lateinit var tvNameError: TextView;
-    private lateinit var tvEmailError: TextView;
-    private lateinit var tvPasswordError: TextView;
+    private lateinit var btnAction: MaterialButton;
+    private lateinit var tilName: TextInputLayout;
+    private lateinit var tilEmail: TextInputLayout;
+    private lateinit var tilPassword: TextInputLayout;
+    private lateinit var tilConfirmPassword: TextInputLayout;
+    private lateinit var mtvToggleMode: MaterialTextView;
+    private lateinit var mtvErrorMessage: MaterialTextView;
+    private lateinit var mtvNameError: MaterialTextView;
+    private lateinit var mtvEmailError: MaterialTextView;
+    private lateinit var mtvPasswordError: MaterialTextView;
     private lateinit var sharedPreferences: SharedPreferencesUtils;
 
     /**
@@ -41,24 +42,24 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         // Get references to UI elements
-        btnAction = findViewById<Button>(R.id.btnAction)
-        etName = findViewById<EditText>(R.id.etName)
-        etEmail = findViewById<EditText>(R.id.etEmail)
-        etPassword = findViewById<EditText>(R.id.etPassword)
-        etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
-        tvToggleMode = findViewById<TextView>(R.id.tvToggleMode)
-        tvErrorMessage = findViewById<TextView>(R.id.tvErrorMessage)
-        tvNameError = findViewById<TextView>(R.id.tvNameError)
-        tvEmailError = findViewById<TextView>(R.id.tvEmailError)
-        tvPasswordError = findViewById<TextView>(R.id.tvPasswordError)
+        btnAction = findViewById(R.id.btnAction)
+        tilName = findViewById(R.id.tilName)
+        tilEmail = findViewById(R.id.tilEmail)
+        tilPassword = findViewById(R.id.tilPassword)
+        tilConfirmPassword = findViewById(R.id.tilConfirmPassword)
+        mtvToggleMode = findViewById(R.id.mtvToggleMode)
+        mtvErrorMessage = findViewById(R.id.mtvErrorMessage)
+        mtvNameError = findViewById(R.id.mtvNameError)
+        mtvEmailError = findViewById(R.id.mtvEmailError)
+        mtvPasswordError = findViewById(R.id.mtvPasswordError)
 
 
         // Set click listeners
         btnAction.setOnClickListener { performAction() }
-        tvToggleMode.setOnClickListener { toggleMode() }
+        mtvToggleMode.setOnClickListener { toggleMode() }
 
         // Initialize and set the toolbar
-        val toolbar = findViewById<Toolbar>(R.id.auth_toolbar)
+        val toolbar = findViewById<MaterialToolbar>(R.id.auth_toolbar)
         setSupportActionBar(toolbar)
 
         // Initialize shared preferences utils
@@ -84,16 +85,16 @@ class AuthActivity : AppCompatActivity() {
     private fun toggleMode() {
         if (isLoginMode()) {
             // Switch to registration mode
-            etName.visibility = View.VISIBLE
-            etConfirmPassword.visibility = View.VISIBLE
+            tilName.visibility = View.VISIBLE
+            tilConfirmPassword.visibility = View.VISIBLE
             btnAction.text = getString(R.string.register)
-            tvToggleMode.text = getString(R.string.switch_to_login)
+            mtvToggleMode.text = getString(R.string.switch_to_login)
         } else {
             // Switch to login mode
-            etName.visibility = View.GONE
-            etConfirmPassword.visibility = View.GONE
+            tilName.visibility = View.GONE
+            tilConfirmPassword.visibility = View.GONE
             btnAction.text = getString(R.string.login)
-            tvToggleMode.text = getString(R.string.switch_to_register)
+            mtvToggleMode.text = getString(R.string.switch_to_register)
         }
     }
 
@@ -107,8 +108,8 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun errorMessage(msg: String, code: Int = 0) {
-        tvErrorMessage.text = msg
-        tvErrorMessage.visibility = if (code == 1) View.VISIBLE else View.GONE
+        mtvErrorMessage.text = msg
+        mtvErrorMessage.visibility = if (code == 1) View.VISIBLE else View.GONE
     }
 
     /**
@@ -116,17 +117,17 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun login() {
         // clear error messages
-        tvNameError.visibility = View.GONE
-        tvEmailError.visibility = View.GONE
-        tvPasswordError.visibility = View.GONE
+        mtvNameError.visibility = View.GONE
+        mtvEmailError.visibility = View.GONE
+        mtvPasswordError.visibility = View.GONE
 
         // clear error message
         errorMessage("")
 
         // Create Login object
         val data = LoginData(
-            etEmail.text.toString(),
-            etPassword.text.toString()
+            tilEmail.editText?.text.toString(),
+            tilPassword.editText?.text.toString()
         )
 
         // Get reference to API
@@ -169,19 +170,19 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun register() {
         // clear error messages
-        tvNameError.visibility = View.GONE
-        tvEmailError.visibility = View.GONE
-        tvPasswordError.visibility = View.GONE
+        mtvNameError.visibility = View.GONE
+        mtvEmailError.visibility = View.GONE
+        mtvPasswordError.visibility = View.GONE
 
         // clear error message
         errorMessage("")
 
         // Create Login object
         val data = RegisterData(
-            name = etName.text.toString(),
-            email = etEmail.text.toString(),
-            password = etPassword.text.toString(),
-            passwordConfirmation = etConfirmPassword.text.toString()
+            name = tilName.editText?.text.toString(),
+            email = tilEmail.editText?.text.toString(),
+            password = tilPassword.editText?.text.toString(),
+            passwordConfirmation = tilConfirmPassword.editText?.text.toString()
         )
 
         // Get reference to API
@@ -225,14 +226,14 @@ class AuthActivity : AppCompatActivity() {
     private fun handleErrors(errors: Map<String, List<String>>) {
         errors.forEach { (field, errorList) ->
             if (field == "name") {
-                tvNameError.text = errorList[0]
-                tvNameError.visibility = View.VISIBLE
+                mtvNameError.text = errorList[0]
+                mtvNameError.visibility = View.VISIBLE
             } else if (field == "email") {
-                tvEmailError.text = errorList[0]
-                tvEmailError.visibility = View.VISIBLE
+                mtvEmailError.text = errorList[0]
+                mtvEmailError.visibility = View.VISIBLE
             } else if (field == "password") {
-                tvPasswordError.text = errorList[0]
-                tvPasswordError.visibility = View.VISIBLE
+                mtvPasswordError.text = errorList[0]
+                mtvPasswordError.visibility = View.VISIBLE
             }
             errorList.forEach { error ->
                 println("  Error: $error")
@@ -246,7 +247,7 @@ class AuthActivity : AppCompatActivity() {
      * @return true if the fragment is in login mode, false otherwise
      */
     private fun isLoginMode(): Boolean {
-        return etName.visibility == View.GONE
+        return tilName.visibility == View.GONE
     }
 
     /**

@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.activity.AuthActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <!--  Toolbar  -->
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/auth_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="#1565C0" />
 
-    <LinearLayout
+    <!--  Content  -->
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16sp">
-        <EditText
-            android:id="@+id/etName"
+
+        <!--   Name     -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            android:visibility="gone"/>
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tvNameError"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--   Name error message     -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvNameError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -35,14 +47,23 @@
             android:textStyle="italic"
             android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/etEmail"
+        <!--   Email     -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"/>
+            android:hint="@string/email">
 
-        <TextView
-            android:id="@+id/tvEmailError"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--   Email error message     -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvEmailError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -51,15 +72,25 @@
             android:textStyle="italic"
             android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/etPassword"
+        <!--   Password     -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            app:endIconMode="password_toggle">
 
-        <TextView
-            android:id="@+id/tvPasswordError"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--   Password error message     -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvPasswordError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -68,15 +99,25 @@
             android:textStyle="italic"
             android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/etConfirmPassword"
+        <!--   Confirm Password     -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:visibility="gone" />
+            android:hint="@string/password"
+            app:endIconMode="password_toggle"
+            android:visibility="gone">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--   Action button (login/register)     -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,21 +125,23 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/tvToggleMode"
+        <!--   Toggle mode (login/register)     -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvToggleMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/switch_to_register"
             android:textSize="18sp"
             android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/tvErrorMessage"
+        <!--   Generic Error message     -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvErrorMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="#ef4444"
             android:textStyle="italic"
             android:visibility="gone" />
-    </LinearLayout>
-</LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

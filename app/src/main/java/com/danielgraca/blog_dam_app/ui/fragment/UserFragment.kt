@@ -98,9 +98,9 @@ class UserFragment : Fragment() {
         Log.d("TOKEN", token)
 
         var data = UserData(
-            name = etEditUserName.text.toString()?:"",
-            email = etEditEmail.text.toString()?:"",
-            password = etEditPassword.text.toString()?: ""
+            name = etEditUserName.text.toString(),
+            email = etEditEmail.text.toString(),
+            password = etEditPassword.text.toString()
         )
 
         // Get reference to API
