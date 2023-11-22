@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Official Material 3 documentation for navigation drawers:
+    https://github.com/material-components/material-components-android/blob/master/docs/components/NavigationDrawer.md#design-api-documentation
+    Official Material 3 documentation:
+    https://m3.material.io
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/main_item"
+        android:title="@string/subheader_title">
+        <menu>
+            <item
+                android:id="@+id/navigation_home"
+                android:icon="@drawable/baseline_home_24"
+                android:title="@string/home_page"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/navigation_user"
+                android:icon="@drawable/baseline_person_outline_24"
+                android:title="@string/user_page"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/navigation_about"
+                android:icon="@drawable/baseline_info_24"
+                android:title="@string/about_page"
+                android:checkable="true" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/navigation_logout"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="@string/logout"
+        android:checkable="true" />
+
+</menu>
