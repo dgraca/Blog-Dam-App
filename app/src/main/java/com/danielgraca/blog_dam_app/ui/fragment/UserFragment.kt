@@ -204,7 +204,9 @@ class UserFragment : Fragment() {
                     // set edit_email with email from response
                     tilEditEmail.editText?.setText(response.body()!!.email)
 
-                    // TODO: update navigation header name and email
+                    if (response.body() != null) {
+                        updateNavigationHeader(response.body()!!)
+                    }
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     logout()
@@ -223,6 +225,19 @@ class UserFragment : Fragment() {
                 logout()
             }
         })
+    }
+
+    /**
+     * Update navigation header
+     */
+    private fun updateNavigationHeader(response: UserEditResponse) {
+        // get reference to navigation header
+        val navigationUserName = requireActivity().findViewById<TextView>(R.id.tvUserName)
+        val navigationEmail = requireActivity().findViewById<TextView>(R.id.tvUserEmail)
+
+        // set navigation header name and email
+        navigationUserName.text = response.name
+        navigationEmail.text = response.email
     }
 
     /**
