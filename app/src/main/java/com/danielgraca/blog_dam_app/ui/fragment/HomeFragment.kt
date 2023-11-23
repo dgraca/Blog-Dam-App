@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.danielgraca.blog_dam_app.R
@@ -17,12 +18,15 @@ import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.ui.adapter.PostListAdapter
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragment : Fragment() {
+    // Get UI elements
+    private lateinit var btnCreatePost: ExtendedFloatingActionButton
     private lateinit var sharedPreferences: SharedPreferencesUtils
 
     /**
@@ -46,8 +50,23 @@ class HomeFragment : Fragment() {
         sharedPreferences = SharedPreferencesUtils
         sharedPreferences.init(requireContext(), "AUTH")
 
+        // Get UI elements
+        btnCreatePost = requireActivity().findViewById(R.id.fabCreatePost)
+
+        // Set click listeners
+        btnCreatePost.setOnClickListener { goToPostForm() }
+
         // Get posts
         getPosts()
+    }
+
+    /**
+     * Go to post form
+     */
+    private fun goToPostForm() {
+        // show a simple dialog sayin' hello world
+        DialogFragment()
+            .show(requireActivity().supportFragmentManager, "dialog")
     }
 
     /**
