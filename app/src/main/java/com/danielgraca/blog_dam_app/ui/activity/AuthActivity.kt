@@ -3,14 +3,17 @@ package com.danielgraca.blog_dam_app.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.data.Login
-import com.danielgraca.blog_dam_app.model.response.Auth
-import com.danielgraca.blog_dam_app.model.data.Register
-import com.danielgraca.blog_dam_app.model.response.Error
+import com.danielgraca.blog_dam_app.model.data.LoginData
+import com.danielgraca.blog_dam_app.model.response.AuthResponse
+import com.danielgraca.blog_dam_app.model.data.RegisterData
+import com.danielgraca.blog_dam_app.model.response.ErrorResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.appbar.MaterialToolbar
@@ -158,7 +161,7 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun login() {
         // Create Login object
-        val data = Login(
+        val data = LoginData(
             tilEmail.editText?.text.toString(),
             tilPassword.editText?.text.toString()
         )
@@ -166,8 +169,8 @@ class AuthActivity : AppCompatActivity() {
         // Get reference to API
         val call = RetrofitInitializer().userAuthService()?.login(data)
 
-        call?.enqueue(object : Callback<Auth?> {
-            override fun onResponse(call: Call<Auth?>, response: Response<Auth?>) {
+        call?.enqueue(object : Callback<AuthResponse?> {
+            override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
                 if (response.isSuccessful) {
                     // Get response body
                     val userAuth = response.body()
@@ -187,14 +190,14 @@ class AuthActivity : AppCompatActivity() {
                     // get error body
                     val errorBody = response.errorBody()?.string()
                     // parse error body to UserEditErrorResponse
-                    val error = Gson().fromJson(errorBody, Error::class.java)
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
 
                     // handle errors
-                    handleErrors(error)
+                    handleErrors(errorResponse)
                 }
             }
 
-            override fun onFailure(call: Call<Auth?>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
                 //
             }
         })
@@ -203,7 +206,7 @@ class AuthActivity : AppCompatActivity() {
     /**
      * Handle update errors
      */
-    private fun handleErrors(errorBody: Error) {
+    private fun handleErrors(errorBody: ErrorResponse) {
         // check if there is a message error
         if (errorBody.message != null) {
             tvAuthError.visibility = View.VISIBLE
@@ -253,7 +256,7 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun register() {
         // Create Login object
-        val data = Register(
+        val data = RegisterData(
             name = tilName.editText?.text.toString(),
             email = tilEmail.editText?.text.toString(),
             password = tilPassword.editText?.text.toString(),
@@ -263,8 +266,8 @@ class AuthActivity : AppCompatActivity() {
         // Get reference to API
         val call = RetrofitInitializer().userAuthService()?.register(data)
 
-        call?.enqueue(object : Callback<Auth?> {
-            override fun onResponse(call: Call<Auth?>, response: Response<Auth?>) {
+        call?.enqueue(object : Callback<AuthResponse?> {
+            override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
                 if (response.isSuccessful) {
                     // Get response body
                     val userAuth = response.body()
@@ -284,14 +287,14 @@ class AuthActivity : AppCompatActivity() {
                     // get error body
                     val errorBody = response.errorBody()?.string()
                     // parse error body to UserEditErrorResponse
-                    val error = Gson().fromJson(errorBody, Error::class.java)
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
 
                     // handle errors
-                    handleErrors(error)
+                    handleErrors(errorResponse)
                 }
             }
 
-            override fun onFailure(call: Call<Auth?>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
                 //
             }
         })
