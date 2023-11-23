@@ -130,7 +130,7 @@ class UserFragment : Fragment() {
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
-        val call = RetrofitInitializer().userDataService()?.delete(token)
+        val call = RetrofitInitializer().userService()?.delete(token)
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
@@ -154,7 +154,7 @@ class UserFragment : Fragment() {
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
-        val call = RetrofitInitializer().userDataService()?.get(token)
+        val call = RetrofitInitializer().userService()?.get(token)
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
@@ -191,10 +191,8 @@ class UserFragment : Fragment() {
             password = tilEditPassword.editText?.text.toString(),
         )
 
-        Log.d("DATA", data.toString())
-
         // Get reference to API
-        val call = RetrofitInitializer().userDataService()?.update(token, data)
+        val call = RetrofitInitializer().userService()?.update(token, data)
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {

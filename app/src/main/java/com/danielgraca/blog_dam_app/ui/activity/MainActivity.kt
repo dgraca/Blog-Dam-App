@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d("TOKEN", token)
 
         // Get reference to API
-        val call = RetrofitInitializer().userDataService()?.get(token)
+        val call = RetrofitInitializer().userService()?.get(token)
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {

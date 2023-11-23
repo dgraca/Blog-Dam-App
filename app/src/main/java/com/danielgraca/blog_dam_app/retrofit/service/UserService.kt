@@ -14,7 +14,7 @@ import retrofit2.http.PUT
 /**
  * Interface to define the user authentication service
  */
-interface UserDataService {
+interface UserService {
 
     /**
      * Send a GET request to the server to get the user data
