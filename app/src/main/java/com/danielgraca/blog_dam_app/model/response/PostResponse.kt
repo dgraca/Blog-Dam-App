@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName
 data class PostResponse (
     @SerializedName("id") val id: Int,
     @SerializedName("title") val title: String,
-    @SerializedName("body") val content: String,
+    @SerializedName("body") val body: String,
+    @SerializedName("image") val image: String?,
+    @SerializedName("truncated_body") val truncatedBody: String,
     @SerializedName("author") val author: AuthorResponse?,
 )

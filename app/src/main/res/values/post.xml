@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="post_image_description">descricao da img</string>
+    <string name="post_title">Titulo do post</string>
+    <string name="post_author_name">Autor do post</string>
+    <string name="post_body">Corpo do post</string>
+    <string name="no_posts">Sem posts para mostrar</string>
+</resources>

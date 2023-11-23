@@ -1,6 +1,5 @@
 package com.danielgraca.blog_dam_app.model.response
 
-import com.danielgraca.blog_dam_app.model.data.PostData
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -8,8 +7,8 @@ import com.google.gson.annotations.SerializedName
  */
 data class PostListResponse (
     @SerializedName("current_page") val currentPage: Int?,
-    @SerializedName("data") val data: List<PostData>?,
+    @SerializedName("data") val data: List<PostResponse>?,
     @SerializedName("last_page") val lastPage: Int?,
     @SerializedName("per_page") val perPage: Int?,
-    @SerializedName("total") val total: Int?
+    @SerializedName("total") val total: Int?,
 )
