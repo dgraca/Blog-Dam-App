@@ -1,8 +1,8 @@
 package com.danielgraca.blog_dam_app.retrofit.service
 
-import com.danielgraca.blog_dam_app.model.data.LoginData
-import com.danielgraca.blog_dam_app.model.response.AuthResponse
-import com.danielgraca.blog_dam_app.model.data.RegisterData
+import com.danielgraca.blog_dam_app.model.data.Login
+import com.danielgraca.blog_dam_app.model.response.Auth
+import com.danielgraca.blog_dam_app.model.data.Register
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -20,18 +20,18 @@ interface UserAuthService {
      * Send a POST request to the server to authenticate the user
      */
     @POST("api/login")
-    fun login(@Body body: LoginData): Call<AuthResponse>
+    fun login(@Body body: Login): Call<Auth>
 
     /**
      * Send a POST request to the server to register the user
      */
     @POST("api/register")
-    fun register(@Body body: RegisterData): Call<AuthResponse>
+    fun register(@Body body: Register): Call<Auth>
 
     /**
      * Send a POST request to the server to logout the user
      */
     @GET("api/logout")
     @Headers("Accept: application/json")
-    fun logout(@Header("Authorization") token: String): Call<AuthResponse>
+    fun logout(@Header("Authorization") token: String): Call<Auth>
 }

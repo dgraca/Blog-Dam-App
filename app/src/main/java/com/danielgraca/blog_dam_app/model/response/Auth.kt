@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * data class's main purpose is to hold data
  * @SerializedName("key") means the value should be serialized to JSON with the provided key
  */
-data class AuthResponse(
+data class Auth(
     @SerializedName("token") val token: String,
     @SerializedName("message") val message: String,
     @SerializedName("errors") val errors: Map<String, List<String>>

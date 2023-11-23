@@ -11,7 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.response.UserEditResponse
+import com.danielgraca.blog_dam_app.model.response.UserEdit
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.fragment.AboutMeFragment
 import com.danielgraca.blog_dam_app.ui.fragment.HomeFragment
@@ -136,8 +136,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Get reference to API
         val call = RetrofitInitializer().userDataService()?.get(token)
 
-        call?.enqueue(object : Callback<UserEditResponse?> {
-            override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+        call?.enqueue(object : Callback<UserEdit?> {
+            override fun onResponse(call: Call<UserEdit?>, response: Response<UserEdit?>) {
                 if (response.isSuccessful) {
                     // set navigation_username with name from response
                     findViewById<TextView>(R.id.tvUserName).text = response.body()?.name
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
 
-            override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<UserEdit?>, t: Throwable) {
                 logout()
             }
         })

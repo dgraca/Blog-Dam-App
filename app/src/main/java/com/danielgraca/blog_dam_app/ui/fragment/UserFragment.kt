@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.data.UserEditData
-import com.danielgraca.blog_dam_app.model.response.ErrorResponse
-import com.danielgraca.blog_dam_app.model.response.UserEditResponse
+import com.danielgraca.blog_dam_app.model.data.UserEdit
+import com.danielgraca.blog_dam_app.model.response.Error
+import com.danielgraca.blog_dam_app.model.response.UserEdit
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
@@ -132,8 +132,8 @@ class UserFragment : Fragment() {
         // Get reference to API
         val call = RetrofitInitializer().userDataService()?.delete(token)
 
-        call?.enqueue(object : Callback<UserEditResponse?> {
-            override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+        call?.enqueue(object : Callback<UserEdit?> {
+            override fun onResponse(call: Call<UserEdit?>, response: Response<UserEdit?>) {
                 if (response.isSuccessful) {
                     logout()
                 } else if (response.code() == 401) {
@@ -141,7 +141,7 @@ class UserFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<UserEdit?>, t: Throwable) {
                 logout()
             }
         })
@@ -156,8 +156,8 @@ class UserFragment : Fragment() {
         // Get reference to API
         val call = RetrofitInitializer().userDataService()?.get(token)
 
-        call?.enqueue(object : Callback<UserEditResponse?> {
-            override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+        call?.enqueue(object : Callback<UserEdit?> {
+            override fun onResponse(call: Call<UserEdit?>, response: Response<UserEdit?>) {
                 if (response.isSuccessful) {
                     // set edit_username with name from response
                     tilEditUserName.editText?.setText(response.body()!!.name)
@@ -168,7 +168,7 @@ class UserFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<UserEdit?>, t: Throwable) {
                 logout()
             }
         })
@@ -185,7 +185,7 @@ class UserFragment : Fragment() {
 
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
-        var data = UserEditData(
+        var data = com.danielgraca.blog_dam_app.model.data.UserEdit(
             name = tilEditUserName.editText?.text.toString(),
             email = tilEditEmail.editText?.text.toString(),
             password = tilEditPassword.editText?.text.toString(),
@@ -196,8 +196,8 @@ class UserFragment : Fragment() {
         // Get reference to API
         val call = RetrofitInitializer().userDataService()?.update(token, data)
 
-        call?.enqueue(object : Callback<UserEditResponse?> {
-            override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+        call?.enqueue(object : Callback<UserEdit?> {
+            override fun onResponse(call: Call<UserEdit?>, response: Response<UserEdit?>) {
                 if (response.isSuccessful) {
                     // set edit_username with name from response
                     tilEditUserName.editText?.setText(response.body()!!.name)
@@ -215,13 +215,13 @@ class UserFragment : Fragment() {
                     // get error body
                     val errorBody = response.errorBody()?.string()
                     // parse error body to UserEditErrorResponse
-                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                    val error = Gson().fromJson(errorBody, Error::class.java)
                     // handle errors
-                    handleUpdateErrors(errorResponse)
+                    handleUpdateErrors(error)
                 }
             }
 
-            override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<UserEdit?>, t: Throwable) {
                 logout()
             }
         })
@@ -230,7 +230,7 @@ class UserFragment : Fragment() {
     /**
      * Update navigation header
      */
-    private fun updateNavigationHeader(response: UserEditResponse) {
+    private fun updateNavigationHeader(response: UserEdit) {
         // get reference to navigation header
         val navigationUserName = requireActivity().findViewById<TextView>(R.id.tvUserName)
         val navigationEmail = requireActivity().findViewById<TextView>(R.id.tvUserEmail)
@@ -263,7 +263,7 @@ class UserFragment : Fragment() {
     /**
      * Handle update errors
      */
-    private fun handleUpdateErrors(errorBody: ErrorResponse) {
+    private fun handleUpdateErrors(errorBody: Error) {
         // check if there is a message error
         if (errorBody.message != null) {
             tvUpdateErrorMessage.text = errorBody.message
