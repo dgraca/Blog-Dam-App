@@ -2,32 +2,33 @@ package com.danielgraca.blog_dam_app.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.danielgraca.blog_dam_app.R
-import com.danielgraca.blog_dam_app.model.response.ErrorResponse
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.ui.adapter.PostListAdapter
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class HomeFragment : Fragment() {
     // Get UI elements
     private lateinit var btnCreatePost: ExtendedFloatingActionButton
+    private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+
+    // Initialize variables
+    private var page: Int = 1
 
     /**
      * Called when the activity is starting
@@ -56,8 +57,25 @@ class HomeFragment : Fragment() {
         // Set click listeners
         btnCreatePost.setOnClickListener { goToPostForm() }
 
+        // Get reference to recycler view
+        recyclerView = requireActivity().findViewById(R.id.rv_posts)
+
+        // Set scroll listener to recycler view
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            // Called when the scroll state changes
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                // If the user is at the bottom of the recycler view
+                if (!recyclerView.canScrollVertically(1)) {
+                    // Get posts with next page
+                    getPosts(page)
+                }
+            }
+        })
+
         // Get posts
-        getPosts()
+        getPosts(page)
     }
 
     /**
@@ -74,7 +92,7 @@ class HomeFragment : Fragment() {
      *
      * Not all posts come with this request, for it is paginated
      */
-    private fun getPosts(page: Int = 1) {
+    private fun getPosts(page: Int) {
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
@@ -85,9 +103,12 @@ class HomeFragment : Fragment() {
                 if (response.isSuccessful) {
                     if (response.body()?.data.isNullOrEmpty()) {
                         // TODO: Handle no posts
-                    } else {
-                        configurePosts(response.body())
+                        return
                     }
+                    // Increment page
+                    this@HomeFragment.page = response.body()?.currentPage!! + 1
+                    // Configure posts to be shown in the view
+                    configurePosts(response.body()!!)
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     logout()
@@ -103,11 +124,9 @@ class HomeFragment : Fragment() {
     /**
      * Configure posts to be shown in the view
      */
-    private fun configurePosts(posts: PostListResponse?) {
-        // Get reference to recycler view
-        val recyclerView: RecyclerView = requireActivity().findViewById(R.id.rv_posts)
+    private fun configurePosts(posts: PostListResponse) {
         // Set adapter which will handle the posts
-        recyclerView.adapter = PostListAdapter(posts!!, requireContext())
+        recyclerView.adapter = PostListAdapter(posts, requireContext())
         // Set layout manager which will handle the posts' layout in the view
         val layoutManager = StaggeredGridLayoutManager( 1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
