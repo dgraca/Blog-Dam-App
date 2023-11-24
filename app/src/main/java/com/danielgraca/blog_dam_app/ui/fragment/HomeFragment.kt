@@ -60,6 +60,9 @@ class HomeFragment : Fragment() {
         // Get reference to recycler view
         recyclerView = requireActivity().findViewById(R.id.rv_posts)
 
+        // Get posts
+        getPosts(page)
+
         // Set scroll listener to recycler view
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             // Called when the scroll state changes
@@ -73,9 +76,6 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-
-        // Get posts
-        getPosts(page)
     }
 
     /**
@@ -116,7 +116,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<PostListResponse?>, t: Throwable) {
-                logout()
+                // TODO: handle on failure
             }
         })
     }
@@ -128,7 +128,7 @@ class HomeFragment : Fragment() {
         // Set adapter which will handle the posts
         recyclerView.adapter = PostListAdapter(posts, requireContext())
         // Set layout manager which will handle the posts' layout in the view
-        val layoutManager = StaggeredGridLayoutManager( 1, StaggeredGridLayoutManager.VERTICAL)
+        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
         recyclerView.layoutManager = layoutManager
     }

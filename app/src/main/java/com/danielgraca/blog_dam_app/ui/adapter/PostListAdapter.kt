@@ -40,9 +40,7 @@ class PostListAdapter(private val posts: PostListResponse, private val context: 
      * Returns the number of posts
      */
     override fun getItemCount(): Int {
-        // If there are no posts, return 0
-        if (posts.data.isNullOrEmpty()) return 0
-        return posts.data.size
+        return posts.data!!.size
     }
 
     /**
