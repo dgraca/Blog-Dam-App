@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="subheader_title">Menu</string>
-    <string name="home_page">Página principal</string>
+    <string name="home_page">Publicações</string>
     <string name="user_page">Perfil</string>
     <string name="about_page">Sobre mim</string>
     <string name="logout">Sair da conta</string>

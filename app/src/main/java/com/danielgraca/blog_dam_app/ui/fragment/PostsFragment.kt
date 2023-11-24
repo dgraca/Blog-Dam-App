@@ -21,7 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class HomeFragment : Fragment() {
+class PostsFragment : Fragment() {
     // Get UI elements
     private lateinit var btnCreatePost: ExtendedFloatingActionButton
     private lateinit var recyclerView: RecyclerView
@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_posts, container, false)
     }
 
     /**
@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
                         return
                     }
                     // Increment page
-                    this@HomeFragment.page = response.body()?.currentPage!! + 1
+                    this@PostsFragment.page = response.body()?.currentPage!! + 1
                     // Configure posts to be shown in the view
                     configurePosts(response.body()!!)
                 } else if (response.code() == 401) {

@@ -14,7 +14,7 @@ import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.UserEditResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.fragment.AboutMeFragment
-import com.danielgraca.blog_dam_app.ui.fragment.HomeFragment
+import com.danielgraca.blog_dam_app.ui.fragment.PostsFragment
 import com.danielgraca.blog_dam_app.ui.fragment.UserFragment
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.navigation.NavigationView
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Set the home fragment as the default fragment
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
+            replaceFragment(PostsFragment())
             navigationView.setCheckedItem(R.id.navigation_home)
         }
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here
         when (item.itemId) {
             R.id.navigation_home -> {
-                replaceFragment(HomeFragment())
+                replaceFragment(PostsFragment())
             }
             R.id.navigation_user -> {
                 replaceFragment(UserFragment())
