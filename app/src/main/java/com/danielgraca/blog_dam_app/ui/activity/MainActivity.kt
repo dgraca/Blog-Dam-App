@@ -131,7 +131,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      */
     private fun getUserData() {
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
-        Log.d("TOKEN", token)
 
         // Get reference to API
         val call = RetrofitInitializer().userService()?.get(token)

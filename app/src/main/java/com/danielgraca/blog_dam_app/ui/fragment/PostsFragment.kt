@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -125,12 +126,28 @@ class PostsFragment : Fragment() {
      * Configure posts to be shown in the view
      */
     private fun configurePosts(posts: PostListResponse) {
-        // Set adapter which will handle the posts
-        recyclerView.adapter = PostListAdapter(posts, requireContext())
+        // Set adapter which will handle the posts with it's item clicker listener
+        recyclerView.adapter = PostListAdapter(posts, requireContext()) {
+            // Go to post details with given id
+            goToPostDetails(it.id)
+        }
         // Set layout manager which will handle the posts' layout in the view
         val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
         recyclerView.layoutManager = layoutManager
+    }
+
+    /**
+     * Go to post details
+     *
+     * @param id The post's id
+     */
+    private fun goToPostDetails(id: Int) {
+        // instantiate fragment transaction so we can send ID to the fragment
+        val postDetailFragment = PostDetailFragment.newInstance(id)
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, postDetailFragment)
+        transaction.commit()
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.danielgraca.blog_dam_app.ui.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,24 @@ import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.squareup.picasso.Picasso
 
-class PostListAdapter(private val posts: PostListResponse, private val context: Context) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
+/**
+ * Adapter for the post list
+ *
+ * @param posts The list of posts
+ * @param listener The click listener
+ * @param context The context
+ *
+ *
+ * DISCLAIMER:
+ * How to implement setOnClickListener for RecyclerView.Adapter
+ * followed from the following article
+ * https://antonioleiva.com/recyclerview-listener/
+ */
+class PostListAdapter(
+    private val posts: PostListResponse,
+    private val context: Context,
+    private val clickListener: (PostResponse) -> Unit,
+) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
     /**
      * Creates a new view holder
      */
@@ -33,6 +49,10 @@ class PostListAdapter(private val posts: PostListResponse, private val context: 
 
             // Bind view holder to post
             holder.bindView(post)
+            // Sets click listener
+            holder.itemView.setOnClickListener {
+                clickListener(post)
+            }
         }
     }
 
@@ -47,6 +67,9 @@ class PostListAdapter(private val posts: PostListResponse, private val context: 
      * Holds the views for each post
      */
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        /**
+         * Binds the view holder to the post
+         */
         fun bindView(post: PostResponse) {
             // Get UI elements
             val title: TextView = itemView.findViewById(R.id.tvPostTitle)
