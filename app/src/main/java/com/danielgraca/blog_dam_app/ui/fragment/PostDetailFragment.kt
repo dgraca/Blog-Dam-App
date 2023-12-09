@@ -197,8 +197,9 @@ class PostDetailFragment(postId: Int) : Fragment() {
                     tvPostDetailTitle.text = response.body()?.title
                     tvPostDetailAuthorName.text = response.body()?.author?.name
                     tvPostDetailBody.text = response.body()?.body
+
                     // Set image using Picasso library
-                    Picasso.get().load(response.body()?.image?.toUri()).into(ivPostDetailImage)
+                    Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + response.body()?.image?.toUri()).into(ivPostDetailImage)
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     // logout()

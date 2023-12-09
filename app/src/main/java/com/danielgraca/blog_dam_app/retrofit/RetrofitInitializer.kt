@@ -23,7 +23,7 @@ class RetrofitInitializer {
     /**
      * Create a Retrofit instance
      */
-    private var retrofit: Retrofit? = Retrofit.Builder()
+    private val retrofit: Retrofit? = Retrofit.Builder()
         .baseUrl("https://wildly-precious-jaguar.ngrok-free.app/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
@@ -34,5 +34,12 @@ class RetrofitInitializer {
     fun userService() = retrofit?.create(UserService::class.java)
     // Create a service for each endpoint for the post data service
     fun postService() = retrofit?.create(PostService::class.java)
+
+    /**
+     * Get the base url
+     */
+    fun getBaseUrl(): String {
+        return retrofit!!.baseUrl().toString()
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.danielgraca.blog_dam_app.ui.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
+import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.squareup.picasso.Picasso
 
 /**
@@ -83,7 +85,7 @@ class PostListAdapter(
             body.text = post.truncatedBody
 
             // Set image using Picasso library
-            Picasso.get().load(post.image?.toUri()).into(image)
+            Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + post.image?.toUri()).into(image)
         }
     }
 }
