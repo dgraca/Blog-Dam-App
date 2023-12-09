@@ -176,8 +176,10 @@ class AuthActivity : AppCompatActivity() {
                     val userAuth = response.body()
 
                     // If there is a token, store it and go to main activity
-                    userAuth?.token?.let { token ->
-                        sharedPreferences.store("TOKEN", token)
+                    userAuth?.let { auth ->
+                        sharedPreferences.store("TOKEN", auth.token)
+                        sharedPreferences.store("USER:name", auth.user.name)
+                        sharedPreferences.store("USER:email", auth.user.email)
                         goToMainActivity()
                     }
 

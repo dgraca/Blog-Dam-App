@@ -14,7 +14,7 @@ import retrofit2.http.POST
 /**
  * Interface to define the user authentication service
  */
-interface UserAuthService {
+interface AuthService {
 
     /**
      * Send a POST request to the server to authenticate the user

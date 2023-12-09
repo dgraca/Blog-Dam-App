@@ -5,16 +5,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import com.danielgraca.blog_dam_app.R
+import com.danielgraca.blog_dam_app.model.response.AuthorResponse
+import com.danielgraca.blog_dam_app.model.response.ErrorResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +37,8 @@ class PostDetailFragment(postId: Int) : Fragment() {
     private lateinit var tvPostDetailAuthorName: TextView
     private lateinit var tvPostDetailBody: TextView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+
+    private lateinit var postAuthor: AuthorResponse
 
     /**
      * Called when the activity is starting
@@ -66,6 +75,103 @@ class PostDetailFragment(postId: Int) : Fragment() {
     }
 
     /**
+     * Create the toolbar menu with the buttons
+     */
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu, menu)
+
+        // Find the menu items by their IDs
+        val editItem = menu.findItem(R.id.toolbar_action_edit)
+        val deleteItem = menu.findItem(R.id.toolbar_action_delete)
+
+        // Set the visibility of the menu items
+        editItem.isVisible = true
+        deleteItem.isVisible = true
+
+        // Set color of the menu items
+        editItem.icon?.setTint(resources.getColor(R.color.white))
+        deleteItem.icon?.setTint(resources.getColor(R.color.white))
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.toolbar_action_edit -> {
+                // TODO: Handle edit action
+            }
+            R.id.toolbar_action_delete -> {
+                deletePost()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
+        return true
+    }
+
+    /**
+     * Delete post
+     */
+    private fun deletePost() {
+        // Get token
+        val token = "Bearer ${sharedPreferences.get("TOKEN")}"
+
+        // Get post
+        val call = RetrofitInitializer().postService()?.deletePost(token!!, arguments?.getInt(ARG_POST_ID)!!)
+
+        // Make request
+        call?.enqueue(object : Callback<Void?> {
+            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                Log.d("DELETE_POST", response.code().toString())
+                if (response.isSuccessful) {
+                    // Go to posts fragment
+                    goToPostsFragment()
+                }
+                if (response.code() == 401) {
+                    // User is not authenticated
+                    logout()
+                }
+                if (response.code() == 500) {
+                    // Request is invalid, handle errors
+                    // get error body
+                    val errorBody = response.errorBody()?.string()
+                    // parse error body to UserEditErrorResponse
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                    // handle errors
+                    handleDeleteError(errorResponse.message.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<Void?>, t: Throwable) {
+                // TODO: Handle on failure
+            }
+        })
+    }
+
+    /**
+     * Handle delete error
+     */
+    private fun handleDeleteError(message: String) {
+        // Show dialog with "Ok" button
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Erro ao eliminar publicação")
+            .setMessage(message)
+            .setPositiveButton("Ok") { dialog, which ->
+                // Do Nothing
+            }
+            .show()
+    }
+
+    /**
+     * Go to posts fragment
+     */
+    private fun goToPostsFragment() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, PostsFragment())
+        fragmentManager.beginTransaction().commit()
+    }
+
+    /**
      * Get post data
      */
     private fun getPost(postId: Int) {
@@ -79,6 +185,15 @@ class PostDetailFragment(postId: Int) : Fragment() {
         call?.enqueue(object : Callback<PostResponse?> {
             override fun onResponse(call: Call<PostResponse?>, response: Response<PostResponse?>) {
                 if (response.isSuccessful) {
+                    // Sets post author
+                    postAuthor = response.body()?.author!!
+
+                    // Checks if the user is the author of the post
+                    if (sharedPreferences.get("USER:email") == postAuthor.email) {
+                        // show edit and delete buttons
+                        setHasOptionsMenu(true)
+                    }
+
                     tvPostDetailTitle.text = response.body()?.title
                     tvPostDetailAuthorName.text = response.body()?.author?.name
                     tvPostDetailBody.text = response.body()?.body

@@ -159,10 +159,17 @@ class UserFragment : Fragment() {
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
                 if (response.isSuccessful) {
+                    var name = response.body()!!.name
+                    var email = response.body()!!.email
+
+                    // store user data in shared preferences
+                    sharedPreferences.store("USER:name", name!!)
+                    sharedPreferences.store("USER:email", email!!)
+
                     // set edit_username with name from response
-                    tilEditUserName.editText?.setText(response.body()!!.name)
+                    tilEditUserName.editText?.setText(name)
                     // set edit_email with email from response
-                    tilEditEmail.editText?.setText(response.body()!!.email)
+                    tilEditEmail.editText?.setText(email)
                 } else if (response.code() == 401) {
                     logout()
                 }
@@ -236,6 +243,10 @@ class UserFragment : Fragment() {
         // set navigation header name and email
         navigationUserName.text = response.name
         navigationEmail.text = response.email
+
+        // store user data in shared preferences
+        sharedPreferences.store("USER:name", response.name!!)
+        sharedPreferences.store("USER:email", response.email!!)
     }
 
     /**

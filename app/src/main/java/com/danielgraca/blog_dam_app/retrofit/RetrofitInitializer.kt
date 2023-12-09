@@ -1,7 +1,7 @@
 package com.danielgraca.blog_dam_app.retrofit
 
 import com.danielgraca.blog_dam_app.retrofit.service.PostService
-import com.danielgraca.blog_dam_app.retrofit.service.UserAuthService
+import com.danielgraca.blog_dam_app.retrofit.service.AuthService
 import com.danielgraca.blog_dam_app.retrofit.service.UserService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -29,7 +29,7 @@ class RetrofitInitializer {
         .build()
 
     // Create a service for each endpoint for the authentication service
-    fun userAuthService() = retrofit?.create(UserAuthService::class.java)
+    fun userAuthService() = retrofit?.create(AuthService::class.java)
     // Create a service for each endpoint for the user data service
     fun userService() = retrofit?.create(UserService::class.java)
     // Create a service for each endpoint for the post data service

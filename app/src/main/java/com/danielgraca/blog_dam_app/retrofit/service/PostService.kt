@@ -4,6 +4,7 @@ import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -37,4 +38,15 @@ interface PostService {
     @GET("api/posts/{postId}")
     @Headers("Accept: application/json")
     fun getPost(@Header("Authorization") token: String, @Path("postId") postId: Int): Call<PostResponse?>
+
+    /**
+     * Delete a post
+     *
+     * @param token the token to be used in the request
+     * @param post the post to be created
+     *
+     */
+    @DELETE("api/posts/{postId}")
+    @Headers("Accept: application/json")
+    fun deletePost(@Header("Authorization") token: String, @Path("postId") postId: Int): Call<Void>
 }
