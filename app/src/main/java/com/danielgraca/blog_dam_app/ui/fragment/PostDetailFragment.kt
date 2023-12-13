@@ -12,10 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.net.toUri
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.AuthorResponse
 import com.danielgraca.blog_dam_app.model.response.ErrorResponse
+import com.danielgraca.blog_dam_app.model.response.GenericResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
@@ -120,16 +122,17 @@ class PostDetailFragment(postId: Int) : Fragment() {
         val call = RetrofitInitializer().postService()?.deletePost(token!!, arguments?.getInt(ARG_POST_ID)!!)
 
         // Make request
-        call?.enqueue(object : Callback<Void?> {
-            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
-                Log.d("DELETE_POST", response.code().toString())
+        call?.enqueue(object : Callback<GenericResponse?> {
+            override fun onResponse(call: Call<GenericResponse?>, response: Response<GenericResponse?>) {
                 if (response.isSuccessful) {
                     // Go to posts fragment
-                    goToPostsFragment()
+                    goToPostsFragment(response.body()?.message.toString())
+                    return
                 }
                 if (response.code() == 401) {
                     // User is not authenticated
                     logout()
+                    return
                 }
                 if (response.code() == 500) {
                     // Request is invalid, handle errors
@@ -139,11 +142,12 @@ class PostDetailFragment(postId: Int) : Fragment() {
                     val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                     // handle errors
                     handleDeleteError(errorResponse.message.toString())
+                    return
                 }
             }
 
-            override fun onFailure(call: Call<Void?>, t: Throwable) {
-                // TODO: Handle on failure
+            override fun onFailure(call: Call<GenericResponse?>, t: Throwable) {
+                TODO("Not yet implemented")
             }
         })
     }
@@ -165,11 +169,16 @@ class PostDetailFragment(postId: Int) : Fragment() {
     /**
      * Go to posts fragment
      */
-    private fun goToPostsFragment() {
+    private fun goToPostsFragment(message: String) {
         val fragmentManager = requireActivity().supportFragmentManager
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, PostsFragment())
-        fragmentManager.beginTransaction().commit()
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, PostsFragment())
+        transaction.commit()
+
+        // Show Toast notification
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
 
     /**
      * Get post data

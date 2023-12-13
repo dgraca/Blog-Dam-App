@@ -1,6 +1,7 @@
 package com.danielgraca.blog_dam_app.retrofit.service
 
 import com.danielgraca.blog_dam_app.model.data.PostData
+import com.danielgraca.blog_dam_app.model.response.GenericResponse
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import okhttp3.MultipartBody
@@ -67,5 +68,5 @@ interface PostService {
      */
     @DELETE("api/posts/{postId}")
     @Headers("Accept: application/json")
-    fun deletePost(@Header("Authorization") token: String, @Path("postId") postId: Int): Call<Void>
+    fun deletePost(@Header("Authorization") token: String, @Path("postId") postId: Int): Call<GenericResponse>
 }
