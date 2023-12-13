@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
+import com.danielgraca.blog_dam_app.ui.fragment.PostDetailFragment
 import com.squareup.picasso.Picasso
 
 /**
@@ -29,12 +31,12 @@ import com.squareup.picasso.Picasso
  * https://antonioleiva.com/recyclerview-listener/
  */
 class PostListAdapter(
-    private val posts: MutableList<PostResponse>?,
     private val context: Context,
-    private val clickListener: (PostResponse) -> Unit,
+    private val activity: FragmentActivity,
 ) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
 
-    private var allPosts: MutableList<PostResponse>? = null
+    // Holds the posts
+    private var posts: MutableList<PostResponse>? = null
 
     /**
      * Creates a new view holder
@@ -56,9 +58,23 @@ class PostListAdapter(
             holder.bindView(post)
             // Sets click listener
             holder.itemView.setOnClickListener {
-                clickListener(post!!)
+                // Go to post details with given id
+                goToPostDetails(it.id)
             }
         }
+    }
+
+    /**
+     * Go to post details
+     *
+     * @param id The post's id
+     */
+    private fun goToPostDetails(id: Int) {
+        // instantiate fragment transaction so we can send ID to the fragment
+        val postDetailFragment = PostDetailFragment.newInstance(id)
+        val transaction = activity.supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, postDetailFragment)
+        transaction.commit()
     }
 
     /**
@@ -66,6 +82,16 @@ class PostListAdapter(
      */
     override fun getItemCount(): Int {
         return posts!!.size
+    }
+
+    /**
+     * Sets the posts
+     *
+     * When a new list of posts is fetched, the old list is cleared and the new one is added
+     */
+    fun setPosts(posts: MutableList<PostResponse>?) {
+        this.posts = posts
+        notifyDataSetChanged()
     }
 
     /**

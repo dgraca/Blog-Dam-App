@@ -32,6 +32,8 @@ class PostsFragment : Fragment() {
 
     // Initialize variables
     private var page: Int = 1
+    private var fetching: Boolean = true
+    private var loading: Boolean = false
     private var allPosts: MutableList<PostResponse>? = null
 
     /**
@@ -74,7 +76,7 @@ class PostsFragment : Fragment() {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 // If the user is at the bottom of the recycler view
-                if (!recyclerView.canScrollVertically(1)) {
+                if (fetching && !loading && !recyclerView.canScrollVertically(1)) {
                     // Get posts with next page
                     getPosts(page)
                 }
@@ -88,6 +90,9 @@ class PostsFragment : Fragment() {
      * Not all posts come with this request, for it is paginated
      */
     private fun getPosts(page: Int) {
+        // Set loading to true
+        loading = true
+
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
@@ -97,12 +102,19 @@ class PostsFragment : Fragment() {
             override fun onResponse(call: Call<PostListResponse?>, response: Response<PostListResponse?>) {
                 if (response.isSuccessful) {
                     if (response.body()?.data.isNullOrEmpty()) {
-                        // TODO: Handle no posts
                         return
+                    }
+
+                    // Check if there are more posts to be fetched
+                    if (response.body()?.currentPage!! >= response.body()?.lastPage!!) {
+                        fetching = false
                     }
 
                     // prepare posts (add them to an existing list or create a new one)
                     preparePosts(response)
+
+                    // Set loading to false
+                    loading = false
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     logout()
@@ -124,6 +136,7 @@ class PostsFragment : Fragment() {
 
         // If it's the first page, create a new list
         if (requestPage == 1) {
+            configureRecyclerView()
             allPosts = mutableListOf()
         }
 
@@ -133,39 +146,31 @@ class PostsFragment : Fragment() {
             allPosts?.add(post)
         }
 
+        // Set posts to recycler view
+        recyclerView.adapter?.let {
+            (it as PostListAdapter).setPosts(allPosts)
+        }
+
+        if (requestPage > 1) {
+            // Scroll from current position to 200 pixels down
+            // This way the user knows that there are more posts
+            recyclerView.smoothScrollBy(0, 1000)
+        }
+
         // Increment page
         this@PostsFragment.page = requestPage + 1
-
-        // Configure posts to be shown in the view
-        configurePosts(allPosts)
     }
 
     /**
      * Configure posts to be shown in the view
      */
-    private fun configurePosts(posts: MutableList<PostResponse>?) {
+    private fun configureRecyclerView() {
         // Set adapter which will handle the posts with it's item clicker listener
-        recyclerView.adapter = PostListAdapter(posts, requireContext()) {
-            // Go to post details with given id
-            goToPostDetails(it.id)
-        }
+        recyclerView.adapter = PostListAdapter(requireContext(), requireActivity())
         // Set layout manager which will handle the posts' layout in the view
         val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
         recyclerView.layoutManager = layoutManager
-    }
-
-    /**
-     * Go to post details
-     *
-     * @param id The post's id
-     */
-    private fun goToPostDetails(id: Int) {
-        // instantiate fragment transaction so we can send ID to the fragment
-        val postDetailFragment = PostDetailFragment.newInstance(id)
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, postDetailFragment)
-        transaction.commit()
     }
 
     /**
