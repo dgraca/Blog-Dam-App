@@ -6,12 +6,14 @@
         android:icon="@drawable/baseline_edit_24"
         app:showAsAction="ifRoom"
         android:tint="@color/white"
-        android:title="@string/toolbar_edit"/>
+        android:title="@string/toolbar_edit"
+        android:visible="false"/>
 
     <item
         android:id="@+id/toolbar_action_delete"
         android:icon="@drawable/baseline_delete_outline_24"
         app:showAsAction="ifRoom"
         android:tint="@color/white"
-        android:title="@string/toolbar_delete"/>
+        android:title="@string/toolbar_delete"
+        android:visible="false"/>
 </menu>

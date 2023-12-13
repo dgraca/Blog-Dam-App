@@ -87,11 +87,12 @@ class PostDetailFragment(postId: Int) : Fragment() {
         val deleteItem = menu.findItem(R.id.toolbar_action_delete)
 
         // Set the visibility of the menu items
-        editItem.isVisible = true
+        editItem.isVisible = false // TODO: CHANGE TO TRUE WHEN MAKING EDIT ACTION
         deleteItem.isVisible = true
 
         // Set color of the menu items
-        editItem.icon?.setTint(resources.getColor(R.color.white))
+        // TODO: Implement EDIT action if feeling like it
+        // editItem.icon?.setTint(resources.getColor(R.color.white))
         deleteItem.icon?.setTint(resources.getColor(R.color.white))
 
         super.onCreateOptionsMenu(menu, inflater)
@@ -99,9 +100,10 @@ class PostDetailFragment(postId: Int) : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.toolbar_action_edit -> {
-                // TODO: Handle edit action
-            }
+            // TODO: Implement EDIT action if feeling like it
+//            R.id.toolbar_action_edit -> {
+//                // TODO: Handle edit action
+//            }
             R.id.toolbar_action_delete -> {
                 deletePost()
             }
