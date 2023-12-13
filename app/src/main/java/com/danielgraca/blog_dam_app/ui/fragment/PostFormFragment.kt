@@ -138,6 +138,13 @@ class PostFormFragment : Fragment() {
                     // Return to posts fragment
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, PostsFragment()).commit()
+
+                    // Show success message
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.post_created,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -145,7 +152,7 @@ class PostFormFragment : Fragment() {
                 // Show error message
                 Toast.makeText(
                     requireContext(),
-                    "Não foi possível criar o post",
+                    R.string.post_not_created,
                     Toast.LENGTH_SHORT
                 ).show()
             }

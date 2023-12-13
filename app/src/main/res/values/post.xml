@@ -11,4 +11,6 @@
     <string name="content">Conteúdo</string>
     <string name="field_required">Campo obrigatório</string>
     <string name="image_required">É obrigatório tirar uma fotografia</string>
+    <string name="post_created">Publicação criada com sucesso</string>
+    <string name="post_not_created">Não foi possível criar a publicação</string>
 </resources>
