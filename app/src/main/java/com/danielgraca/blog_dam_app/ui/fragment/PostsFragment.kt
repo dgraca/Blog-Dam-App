@@ -80,15 +80,6 @@ class PostsFragment : Fragment() {
     }
 
     /**
-     * Go to post form
-     */
-    private fun goToPostForm() {
-        // show a simple dialog sayin' hello world
-        DialogFragment()
-            .show(requireActivity().supportFragmentManager, "dialog")
-    }
-
-    /**
      * Get a list of posts
      *
      * Not all posts come with this request, for it is paginated
@@ -147,6 +138,17 @@ class PostsFragment : Fragment() {
         val postDetailFragment = PostDetailFragment.newInstance(id)
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, postDetailFragment)
+        transaction.commit()
+    }
+
+    /**
+     * Go to post details
+     *
+     * @param id The post's id
+     */
+    private fun goToPostForm() {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, PostFormFragment())
         transaction.commit()
     }
 

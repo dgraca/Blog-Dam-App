@@ -6,4 +6,9 @@
     <string name="post_body">Corpo do post</string>
     <string name="post_create">Criar publicação</string>
     <string name="no_posts">Sem posts para mostrar</string>
+    <string name="create_post">Criar publicação</string>
+    <string name="take_picture">Tirar fotografia</string>
+    <string name="content">Conteúdo</string>
+    <string name="field_required">Campo obrigatório</string>
+    <string name="image_required">É obrigatório tirar uma fotografia</string>
 </resources>

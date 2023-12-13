@@ -51,6 +51,12 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.3.0")
     implementation("com.squareup.retrofit2:converter-gson:2.3.0")
 
+    // OkHttp for logging
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+
+
     // Picasso for image loading
     implementation("com.squareup.picasso:picasso:2.8")
 
