@@ -2,6 +2,7 @@ package com.danielgraca.blog_dam_app.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
+import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.ui.adapter.PostListAdapter
@@ -30,6 +32,7 @@ class PostsFragment : Fragment() {
 
     // Initialize variables
     private var page: Int = 1
+    private var allPosts: MutableList<PostResponse>? = null
 
     /**
      * Called when the activity is starting
@@ -97,10 +100,9 @@ class PostsFragment : Fragment() {
                         // TODO: Handle no posts
                         return
                     }
-                    // Increment page
-                    this@PostsFragment.page = response.body()?.currentPage!! + 1
-                    // Configure posts to be shown in the view
-                    configurePosts(response.body()!!)
+
+                    // prepare posts (add them to an existing list or create a new one)
+                    preparePosts(response)
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     logout()
@@ -114,9 +116,34 @@ class PostsFragment : Fragment() {
     }
 
     /**
+     * Prepare posts to be shown in the view
+     */
+    private fun preparePosts(response: Response<PostListResponse?>) {
+        // Get current page from response
+        val requestPage = response.body()?.currentPage!!
+
+        // If it's the first page, create a new list
+        if (requestPage == 1) {
+            allPosts = mutableListOf()
+        }
+
+        // Loop through the list of posts
+        for (post in response.body()!!.data!!) {
+            // Add post to the list
+            allPosts?.add(post)
+        }
+
+        // Increment page
+        this@PostsFragment.page = requestPage + 1
+
+        // Configure posts to be shown in the view
+        configurePosts(allPosts)
+    }
+
+    /**
      * Configure posts to be shown in the view
      */
-    private fun configurePosts(posts: PostListResponse) {
+    private fun configurePosts(posts: MutableList<PostResponse>?) {
         // Set adapter which will handle the posts with it's item clicker listener
         recyclerView.adapter = PostListAdapter(posts, requireContext()) {
             // Go to post details with given id

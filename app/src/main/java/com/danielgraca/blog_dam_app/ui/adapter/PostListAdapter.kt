@@ -29,10 +29,13 @@ import com.squareup.picasso.Picasso
  * https://antonioleiva.com/recyclerview-listener/
  */
 class PostListAdapter(
-    private val posts: PostListResponse,
+    private val posts: MutableList<PostResponse>?,
     private val context: Context,
     private val clickListener: (PostResponse) -> Unit,
 ) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
+
+    private var allPosts: MutableList<PostResponse>? = null
+
     /**
      * Creates a new view holder
      */
@@ -47,13 +50,13 @@ class PostListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (itemCount > 0) {
             // Get post
-            val post = posts.data!![position]
+            val post = posts?.get(position)
 
             // Bind view holder to post
             holder.bindView(post)
             // Sets click listener
             holder.itemView.setOnClickListener {
-                clickListener(post)
+                clickListener(post!!)
             }
         }
     }
@@ -62,7 +65,7 @@ class PostListAdapter(
      * Returns the number of posts
      */
     override fun getItemCount(): Int {
-        return posts.data!!.size
+        return posts!!.size
     }
 
     /**
@@ -72,7 +75,7 @@ class PostListAdapter(
         /**
          * Binds the view holder to the post
          */
-        fun bindView(post: PostResponse) {
+        fun bindView(post: PostResponse?) {
             // Get UI elements
             val title: TextView = itemView.findViewById(R.id.tvPostTitle)
             val authorName: TextView = itemView.findViewById(R.id.tvPostAuthorName)
@@ -80,12 +83,12 @@ class PostListAdapter(
             val image: ImageView = itemView.findViewById(R.id.ivPostImage)
 
             // Set UI elements
-            title.text = post.title
-            authorName.text = post.author?.name
-            body.text = post.truncatedBody
+            title.text = post?.title
+            authorName.text = post?.author?.name
+            body.text = post?.truncatedBody
 
             // Set image using Picasso library
-            Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + post.image?.toUri()).into(image)
+            Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + post?.image?.toUri()).into(image)
         }
     }
 }
