@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
@@ -35,6 +36,9 @@ class UserFragment : Fragment() {
     private lateinit var btnDeleteUser: ExtendedFloatingActionButton
     private lateinit var tvUpdateErrorMessage: TextView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+    private lateinit var edit_user_overlay: RelativeLayout
+
+    private var loading: Boolean = false
 
     /**
      * Called when the activity is starting
@@ -60,6 +64,7 @@ class UserFragment : Fragment() {
         btnEditUser = view.findViewById(R.id.btnEditUser)
         tvUpdateErrorMessage = view.findViewById(R.id.tvUpdateErrorMessage)
         btnDeleteUser = view.findViewById(R.id.fabDeleteUser)
+        edit_user_overlay = view.findViewById(R.id.edit_user_overlay)
 
         // Initialize shared preferences utils
         sharedPreferences = SharedPreferencesUtils
@@ -127,6 +132,8 @@ class UserFragment : Fragment() {
      * Delete account
      */
     private fun deleteAccount() {
+        showSpinner()
+
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
@@ -134,6 +141,7 @@ class UserFragment : Fragment() {
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     logout()
                 } else if (response.code() == 401) {
@@ -142,6 +150,7 @@ class UserFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+                hideSpinner()
                 logout()
             }
         })
@@ -151,6 +160,8 @@ class UserFragment : Fragment() {
      * Get user data
      */
     private fun getUserData() {
+        showSpinner()
+
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
         // Get reference to API
@@ -158,6 +169,7 @@ class UserFragment : Fragment() {
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     var name = response.body()!!.name
                     var email = response.body()!!.email
@@ -176,6 +188,7 @@ class UserFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+                hideSpinner()
                 logout()
             }
         })
@@ -185,6 +198,8 @@ class UserFragment : Fragment() {
      * Update user data
      */
     private fun updateUserData() {
+        showSpinner()
+
         // clear errors
         clearErrors()
         // clear focus
@@ -203,6 +218,7 @@ class UserFragment : Fragment() {
 
         call?.enqueue(object : Callback<UserEditResponse?> {
             override fun onResponse(call: Call<UserEditResponse?>, response: Response<UserEditResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     // set edit_username with name from response
                     tilEditUserName.editText?.setText(response.body()!!.name)
@@ -227,6 +243,7 @@ class UserFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<UserEditResponse?>, t: Throwable) {
+                hideSpinner()
                 logout()
             }
         })
@@ -247,6 +264,34 @@ class UserFragment : Fragment() {
         // store user data in shared preferences
         sharedPreferences.store("USER:name", response.name!!)
         sharedPreferences.store("USER:email", response.email!!)
+    }
+
+    /**
+     * Start the loading spinner
+     */
+    private fun showSpinner() {
+        loading = true
+
+        // show loading spinner
+        edit_user_overlay.visibility = View.VISIBLE
+
+        // block UI
+        btnEditUser.isEnabled = false
+        btnDeleteUser.isEnabled = false
+    }
+
+    /**
+     * Stop the loading spinner
+     */
+    private fun hideSpinner() {
+        loading = false
+
+        // hide loading spinner
+        edit_user_overlay.visibility = View.GONE
+
+        // enable UI
+        btnEditUser.isEnabled = true
+        btnDeleteUser.isEnabled = true
     }
 
     /**
