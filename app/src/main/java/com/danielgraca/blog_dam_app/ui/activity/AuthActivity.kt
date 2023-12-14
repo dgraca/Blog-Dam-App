@@ -7,7 +7,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.LoginData
@@ -36,6 +38,9 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var tvAuthError: TextView
     private lateinit var mtvToggleMode: MaterialTextView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+    private lateinit var auth_overlay: RelativeLayout
+
+    private var loading: Boolean = false
 
     /**
      * Called when the activity is starting
@@ -52,6 +57,7 @@ class AuthActivity : AppCompatActivity() {
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword)
         tvAuthError = findViewById(R.id.tvAuthError)
         mtvToggleMode = findViewById(R.id.mtvToggleMode)
+        auth_overlay = findViewById(R.id.auth_overlay)
 
         /**
          * Clear errors when user starts typing
@@ -160,6 +166,8 @@ class AuthActivity : AppCompatActivity() {
      * Perform login action
      */
     private fun login() {
+        showSpinner()
+
         // Create Login object
         val data = LoginData(
             tilEmail.editText?.text.toString(),
@@ -171,6 +179,7 @@ class AuthActivity : AppCompatActivity() {
 
         call?.enqueue(object : Callback<AuthResponse?> {
             override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     // Get response body
                     val userAuth = response.body()
@@ -200,7 +209,7 @@ class AuthActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
-                //
+                hideSpinner()
             }
         })
     }
@@ -257,6 +266,8 @@ class AuthActivity : AppCompatActivity() {
      * Perform register action
      */
     private fun register() {
+        showSpinner()
+
         // Create Login object
         val data = RegisterData(
             name = tilName.editText?.text.toString(),
@@ -270,6 +281,7 @@ class AuthActivity : AppCompatActivity() {
 
         call?.enqueue(object : Callback<AuthResponse?> {
             override fun onResponse(call: Call<AuthResponse?>, response: Response<AuthResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     // Get response body
                     val userAuth = response.body()
@@ -297,9 +309,35 @@ class AuthActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<AuthResponse?>, t: Throwable) {
-                //
+                hideSpinner()
             }
         })
+    }
+
+    /**
+     * Start the loading spinner
+     */
+    private fun showSpinner() {
+        loading = true
+
+        // show loading spinner
+        auth_overlay.visibility = View.VISIBLE
+
+        // block UI
+        btnAction.isEnabled = false
+    }
+
+    /**
+     * Stop the loading spinner
+     */
+    private fun hideSpinner() {
+        loading = false
+
+        // hide loading spinner
+        auth_overlay.visibility = View.GONE
+
+        // enable UI
+        btnAction.isEnabled = true
     }
 
     /**
