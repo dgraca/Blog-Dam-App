@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -29,11 +30,12 @@ class PostsFragment : Fragment() {
     private lateinit var btnCreatePost: ExtendedFloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+    private lateinit var posts_overlay: RelativeLayout
 
     // Initialize variables
     private var page: Int = 1
-    private var fetching: Boolean = true
-    private var loading: Boolean = false
+    private var fetching: Boolean = true // if there are more posts to be fetched
+    private var loading: Boolean = false // if the app is loading posts
     private var allPosts: MutableList<PostResponse>? = null
 
     /**
@@ -59,6 +61,7 @@ class PostsFragment : Fragment() {
 
         // Get UI elements
         btnCreatePost = requireActivity().findViewById(R.id.fabCreatePost)
+        posts_overlay = requireActivity().findViewById(R.id.posts_overlay)
 
         // Set click listeners
         btnCreatePost.setOnClickListener { goToPostForm() }
@@ -90,6 +93,8 @@ class PostsFragment : Fragment() {
      * Not all posts come with this request, for it is paginated
      */
     private fun getPosts(page: Int) {
+        showSpinner()
+
         // Set loading to true
         loading = true
 
@@ -119,10 +124,16 @@ class PostsFragment : Fragment() {
                     // User is not authenticated
                     logout()
                 }
+
+                // Unlike the other requests, this one hides the spinner AFTER it prepares the posts.
+                // This happens because, after the posts are prepared, it will scroll down some pixels.
+                // If the spinner is hidden first, it assumes that the user is at the bottom of the recycler view
+                // and fetches the same data again.
+                hideSpinner()
             }
 
             override fun onFailure(call: Call<PostListResponse?>, t: Throwable) {
-                // TODO: handle on failure
+                hideSpinner()
             }
         })
     }
@@ -154,7 +165,7 @@ class PostsFragment : Fragment() {
         if (requestPage > 1) {
             // Scroll from current position to 200 pixels down
             // This way the user knows that there are more posts
-            recyclerView.smoothScrollBy(0, 1000)
+            recyclerView.smoothScrollBy(0, 800)
         }
 
         // Increment page
@@ -171,6 +182,32 @@ class PostsFragment : Fragment() {
         val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
         recyclerView.layoutManager = layoutManager
+    }
+
+    /**
+     * Start the loading spinner
+     */
+    private fun showSpinner() {
+        loading = true
+
+        // show loading spinner
+        posts_overlay.visibility = View.VISIBLE
+
+        // block UI
+        btnCreatePost.isEnabled = false
+    }
+
+    /**
+     * Stop the loading spinner
+     */
+    private fun hideSpinner() {
+        loading = false
+
+        // hide loading spinner
+        posts_overlay.visibility = View.GONE
+
+        // enable UI
+        btnCreatePost.isEnabled = true
     }
 
     /**
