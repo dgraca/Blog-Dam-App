@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +45,9 @@ class PostFormFragment : Fragment() {
     private lateinit var btnSendForm: MaterialButton
     private lateinit var ivPostImageForm: ImageView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+    private lateinit var create_post_overlay: RelativeLayout
+
+    private var loading: Boolean = false
 
     /**
      * Called when the activity is starting
@@ -69,6 +73,7 @@ class PostFormFragment : Fragment() {
         // Get UI elements
         tiPostFormTitle = requireActivity().findViewById(R.id.tiPostFormTitle)
         tiPostFormContent = requireActivity().findViewById(R.id.tiPostFormContent)
+        create_post_overlay = requireActivity().findViewById(R.id.create_post_overlay)
 
         tvPostImageError = requireActivity().findViewById(R.id.tvPostImageError)
         tvPostImageError.text = getString(R.string.image_required)
@@ -93,7 +98,7 @@ class PostFormFragment : Fragment() {
     /**
      * Handles the result of the camera intent
      */
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             ivPostImageForm.setImageBitmap(data?.extras?.get("data") as Bitmap)
@@ -104,8 +109,13 @@ class PostFormFragment : Fragment() {
      * Create a post with the given data
      */
     private fun createPost() {
+        showSpinner()
+
         // Checks if there are fields not filled
-        if(checkForm()) return
+        if(checkForm()) {
+            hideSpinner()
+            return
+        }
 
         // Get user token
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
@@ -133,6 +143,7 @@ class PostFormFragment : Fragment() {
         // Set callback
         call?.enqueue(object : Callback<PostResponse?> {
             override fun onResponse(call: Call<PostResponse?>, response: Response<PostResponse?>) {
+                hideSpinner()
                 // If the request is successful
                 if (response.isSuccessful) {
                     // Return to posts fragment
@@ -149,6 +160,7 @@ class PostFormFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<PostResponse?>, t: Throwable) {
+                hideSpinner()
                 // Show error message
                 Toast.makeText(
                     requireContext(),
@@ -191,6 +203,34 @@ class PostFormFragment : Fragment() {
         }
 
         return error;
+    }
+
+    /**
+     * Start the loading spinner
+     */
+    private fun showSpinner() {
+        loading = true
+
+        // show loading spinner
+        create_post_overlay.visibility = View.VISIBLE
+
+        // block UI
+        btnSendForm.isEnabled = false
+        btnPhotoForm.isEnabled = false
+    }
+
+    /**
+     * Stop the loading spinner
+     */
+    private fun hideSpinner() {
+        loading = false
+
+        // hide loading spinner
+        create_post_overlay.visibility = View.GONE
+
+        // enable UI
+        btnSendForm.isEnabled = true
+        btnPhotoForm.isEnabled = true
     }
 
     /**

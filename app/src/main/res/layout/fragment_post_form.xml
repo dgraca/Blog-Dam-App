@@ -3,83 +3,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- Title -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tiPostFormTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:errorEnabled="true">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPostFormTitle"
+        <!-- Title -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tiPostFormTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/post_title"
-            android:inputType="textCapSentences" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="16dp"
+            app:errorEnabled="true">
 
-    <!-- Content -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tiPostFormContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tiPostFormTitle"
-        android:layout_marginBottom="16dp"
-        app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPostFormTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/post_title"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPostFormContent"
+        <!-- Content -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tiPostFormContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/content"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:gravity="top" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_below="@id/tiPostFormTitle"
+            android:layout_marginBottom="16dp"
+            app:errorEnabled="true">
 
-    <!-- Button to Take a Picture -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPhotoForm"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tiPostFormContent"
-        android:layout_marginTop="16dp"
-        android:text="@string/take_picture"
-        app:cornerRadius="8dp" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPostFormContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <!--  Text view to display Error Message  -->
-    <TextView
-        android:id="@+id/tvPostImageError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#F44336"
-        android:textSize="16sp"
-        android:layout_below="@+id/btnPhotoForm"
-        android:visibility="gone" />
+        <!-- Button to Take a Picture -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPhotoForm"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tiPostFormContent"
+            android:layout_marginTop="16dp"
+            android:text="@string/take_picture"
+            app:cornerRadius="8dp" />
 
-    <!-- Button to Create Publication -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSendForm"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnPhotoForm"
-        android:layout_marginTop="28dp"
-        android:text="@string/create_post"
-        app:cornerRadius="8dp" />
+        <!--  Text view to display Error Message  -->
+        <TextView
+            android:id="@+id/tvPostImageError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F44336"
+            android:textSize="16sp"
+            android:layout_below="@+id/btnPhotoForm"
+            android:visibility="gone" />
 
-    <!-- ImageView to Display Picture -->
-    <ImageView
-        android:id="@+id/ivPostImageForm"
+        <!-- Button to Create Publication -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSendForm"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnPhotoForm"
+            android:layout_marginTop="28dp"
+            android:text="@string/create_post"
+            app:cornerRadius="8dp" />
+
+        <!-- ImageView to Display Picture -->
+        <ImageView
+            android:id="@+id/ivPostImageForm"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/btnSendForm"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+
+    <!--  Spinner Overlay   -->
+    <RelativeLayout
+        android:id="@+id/create_post_overlay"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/btnSendForm"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <!-- CircularProgressIndicator in the middle -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
 </RelativeLayout>
