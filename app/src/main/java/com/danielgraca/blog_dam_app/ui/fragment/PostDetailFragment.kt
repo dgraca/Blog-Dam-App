@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
@@ -39,8 +40,10 @@ class PostDetailFragment(postId: Int) : Fragment() {
     private lateinit var tvPostDetailAuthorName: TextView
     private lateinit var tvPostDetailBody: TextView
     private lateinit var sharedPreferences: SharedPreferencesUtils
+    private lateinit var post_detail_overlay: RelativeLayout
 
     private lateinit var postAuthor: AuthorResponse
+    private var loading: Boolean = false
 
     /**
      * Called when the activity is starting
@@ -71,6 +74,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
         tvPostDetailTitle = view.findViewById(R.id.tvPostDetailTitle)
         tvPostDetailAuthorName = view.findViewById(R.id.tvPostDetailAuthorName)
         tvPostDetailBody = view.findViewById(R.id.tvPostDetailBody)
+        post_detail_overlay = view.findViewById(R.id.post_detail_overlay)
 
         // Get post
         getPost(postId!!)
@@ -88,7 +92,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
 
         // Set the visibility of the menu items
         editItem.isVisible = false // TODO: CHANGE TO TRUE WHEN MAKING EDIT ACTION
-        deleteItem.isVisible = true
+        deleteItem.isVisible = !loading
 
         // Set color of the menu items
         // TODO: Implement EDIT action if feeling like it
@@ -221,6 +225,26 @@ class PostDetailFragment(postId: Int) : Fragment() {
                 TODO("Not yet implemented")
             }
         })
+    }
+
+    /**
+     * Start the loading spinner
+     */
+    private fun showSpinner() {
+        loading = true
+
+        // show loading spinner
+        post_detail_overlay.visibility = View.VISIBLE
+    }
+
+    /**
+     * Stop the loading spinner
+     */
+    private fun hideSpinner() {
+        loading = false
+
+        // hide loading spinner
+        post_detail_overlay.visibility = View.GONE
     }
 
     /**
