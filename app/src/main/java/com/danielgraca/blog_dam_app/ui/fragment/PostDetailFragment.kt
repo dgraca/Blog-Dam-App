@@ -109,7 +109,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
 //                // TODO: Handle edit action
 //            }
             R.id.toolbar_action_delete -> {
-                deletePost()
+                showDeleteDialog()
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -118,9 +118,28 @@ class PostDetailFragment(postId: Int) : Fragment() {
     }
 
     /**
+     * Show delete dialog
+     */
+    private fun showDeleteDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.delete_dialog_post_title))
+            .setMessage(resources.getString(R.string.delete_dialog_post_supporting_text))
+            .setNegativeButton(resources.getString(R.string.delete_dialog_post_decline)) { _, _ ->
+                // do nothing
+            }
+            .setPositiveButton(resources.getString(R.string.delete_dialog_post_accept)) { _, _ ->
+                // send a request o server to delete account
+                deletePost()
+            }
+            .show()
+    }
+
+    /**
      * Delete post
      */
     private fun deletePost() {
+        showSpinner()
+
         // Get token
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
@@ -130,6 +149,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
         // Make request
         call?.enqueue(object : Callback<GenericResponse?> {
             override fun onResponse(call: Call<GenericResponse?>, response: Response<GenericResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     // Go to posts fragment
                     goToPostsFragment(response.body()?.message.toString())
@@ -153,7 +173,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
             }
 
             override fun onFailure(call: Call<GenericResponse?>, t: Throwable) {
-                TODO("Not yet implemented")
+                hideSpinner()
             }
         })
     }
@@ -190,6 +210,8 @@ class PostDetailFragment(postId: Int) : Fragment() {
      * Get post data
      */
     private fun getPost(postId: Int) {
+        showSpinner()
+
         // Get token
         val token = "Bearer ${sharedPreferences.get("TOKEN")}"
 
@@ -199,6 +221,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
         // Make request
         call?.enqueue(object : Callback<PostResponse?> {
             override fun onResponse(call: Call<PostResponse?>, response: Response<PostResponse?>) {
+                hideSpinner()
                 if (response.isSuccessful) {
                     // Sets post author
                     postAuthor = response.body()?.author!!
@@ -222,7 +245,7 @@ class PostDetailFragment(postId: Int) : Fragment() {
             }
 
             override fun onFailure(call: Call<PostResponse?>, t: Throwable) {
-                TODO("Not yet implemented")
+                hideSpinner()
             }
         })
     }

@@ -118,10 +118,10 @@ class UserFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.delete_dialog_title))
             .setMessage(resources.getString(R.string.delete_dialog_supporting_text))
-            .setNegativeButton(resources.getString(R.string.delete_dialog_decline)) { dialog, which ->
+            .setNegativeButton(resources.getString(R.string.delete_dialog_decline)) { _, _ ->
                 // do nothing
             }
-            .setPositiveButton(resources.getString(R.string.delete_dialog_accept)) { dialog, which ->
+            .setPositiveButton(resources.getString(R.string.delete_dialog_accept)) { _, _ ->
                 // send a request o server to delete account
                 deleteAccount()
             }

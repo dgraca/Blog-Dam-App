@@ -13,4 +13,10 @@
     <string name="image_required">É obrigatório tirar uma fotografia</string>
     <string name="post_created">Publicação criada com sucesso</string>
     <string name="post_not_created">Não foi possível criar a publicação</string>
+
+    <!--  Delete user dialog  -->
+    <string name="delete_dialog_post_title">Eliminar publicação</string>
+    <string name="delete_dialog_post_supporting_text">Tem a certeza que pertende eliminar esta publicação? Esta ação é irreversível.</string>
+    <string name="delete_dialog_post_decline">Cancelar</string>
+    <string name="delete_dialog_post_accept">Sim, eliminar</string>
 </resources>
