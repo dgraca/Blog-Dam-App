@@ -59,7 +59,7 @@ class PostListAdapter(
             // Sets click listener
             holder.itemView.setOnClickListener {
                 // Go to post details with given id
-                goToPostDetails(it.id)
+                goToPostDetails(post?.id!!)
             }
         }
     }
