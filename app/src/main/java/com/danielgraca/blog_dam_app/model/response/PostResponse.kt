@@ -12,4 +12,5 @@ data class PostResponse (
     @SerializedName("image") val image: String?,
     @SerializedName("truncated_body") val truncatedBody: String,
     @SerializedName("author") val author: AuthorResponse?,
+    @SerializedName("comments") val comments: List<CommentResponse>?,
 )
