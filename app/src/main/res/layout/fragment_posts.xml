@@ -23,7 +23,8 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/post_create"
-            app:icon="@drawable/baseline_add_24" />
+            app:icon="@drawable/baseline_add_24"
+            app:backgroundTint="?attr/colorAccent" />
     </RelativeLayout>
 
     <!--  Spinner Overlay   -->

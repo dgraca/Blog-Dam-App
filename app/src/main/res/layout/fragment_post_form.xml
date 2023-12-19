@@ -84,7 +84,8 @@
             android:layout_height="200dp"
             android:layout_below="@id/btnSendForm"
             android:layout_marginTop="16dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:tint="@android:color/transparent" />
 
     </RelativeLayout>
 

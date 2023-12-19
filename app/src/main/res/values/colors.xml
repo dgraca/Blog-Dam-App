@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="toolbar">#1565C0</color>
+
+    <!--  light mode  -->
+    <color name="my_light_primary">#3F95F7</color>
+    <color name="my_light_primary_variant">#1B65CC</color>
+    <color name="my_light_secondary">#78ACE8</color>
+    <color name="my_light_error">#B00020</color>
+    <color name="my_light_text_primary">#000000</color>
+    <color name="my_light_icon_tint">#3F95F7</color>
+
+
+    <!--  dark mode  -->
+    <color name="my_dark_primary">#1565C0</color>
+    <color name="my_dark_primary_variant">#003c8f</color>
+    <color name="my_dark_secondary">#518FD6</color>
+    <color name="my_dark_error">#CF6679</color>
+    <color name="my_dark_text_primary">#FFFFFF</color>
+    <color name="my_dark_icon_tint">#1565C0</color>
 </resources>

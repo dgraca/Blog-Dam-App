@@ -94,7 +94,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:text="@string/edit_delete_action"
-            app:icon="@drawable/baseline_delete_outline_24" />
+            app:icon="@drawable/baseline_delete_outline_24"
+            app:backgroundTint="?attr/colorAccent" />
     </RelativeLayout>
 
     <!--  Spinner Overlay   -->

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:background="#1565C0"
+    android:background="@color/toolbar"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp">
@@ -14,15 +14,15 @@
         android:layout_height="wrap_content"
         android:text="@string/navigation_username"
         android:textSize="24sp"
-        android:textColor="#fff" />
+        android:textColor="?android:attr/textColorPrimary" />
     <TextView
         android:id="@+id/tvUserEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/navigation_email"
         android:textSize="18sp"
-        android:textColor="#fff"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp"
+        android:textColor="?android:attr/textColorPrimary" />
 
 
 </LinearLayout>

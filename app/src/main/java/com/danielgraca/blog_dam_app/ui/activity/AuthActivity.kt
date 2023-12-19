@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.LoginData
@@ -48,6 +49,9 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
+
+        // Set status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.toolbar)
 
         // Get references to UI elements
         btnAction = findViewById(R.id.btnAction)

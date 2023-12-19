@@ -1,12 +1,16 @@
 package com.danielgraca.blog_dam_app.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.ColorStateList
+import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -43,6 +47,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Get reference to drawer layout
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+
+        // Set status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.toolbar)
 
         // Initialize and set the toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
