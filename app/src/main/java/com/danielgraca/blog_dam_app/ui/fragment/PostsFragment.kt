@@ -107,6 +107,7 @@ class PostsFragment : Fragment() {
             override fun onResponse(call: Call<PostListResponse?>, response: Response<PostListResponse?>) {
                 if (response.isSuccessful) {
                     if (response.body()?.data.isNullOrEmpty()) {
+                        hideSpinner()
                         return
                     }
 

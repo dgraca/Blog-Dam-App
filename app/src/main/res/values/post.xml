@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="post_image_description">descricao da img</string>
-    <string name="post_title">Titulo do post</string>
-    <string name="post_author_name">Autor do post</string>
-    <string name="post_body">Corpo do post</string>
+    <string name="post_image_description">Descrição da imagem</string>
+    <string name="post_title">Titulo da publicação</string>
+    <string name="post_author_name">Autor da publicação</string>
+    <string name="post_body">Corpo da publicação</string>
     <string name="post_create">Criar publicação</string>
-    <string name="no_posts">Sem posts para mostrar</string>
+    <string name="no_posts">Sem publicações para mostrar</string>
     <string name="create_post">Criar publicação</string>
     <string name="take_picture">Tirar fotografia</string>
     <string name="content">Conteúdo</string>

@@ -24,7 +24,7 @@ class RetrofitInitializer {
      * Create a Retrofit instance
      */
     private val retrofit: Retrofit? = Retrofit.Builder()
-        .baseUrl("https://wildly-precious-jaguar.ngrok-free.app/")
+        .baseUrl("https://damblog.danielgraca.com/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
