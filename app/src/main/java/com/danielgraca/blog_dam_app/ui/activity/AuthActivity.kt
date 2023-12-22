@@ -228,6 +228,7 @@ class AuthActivity : AppCompatActivity() {
             tvAuthError.text = errorBody.message
         }
 
+        // check if errorBody contains errors
         if (errorBody.errors != null) {
             // loop through errors
             for ((key, value) in errorBody.errors) {

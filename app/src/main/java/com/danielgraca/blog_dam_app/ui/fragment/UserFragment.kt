@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doBeforeTextChanged
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.data.UserEditData
@@ -228,6 +229,8 @@ class UserFragment : Fragment() {
                     if (response.body() != null) {
                         updateNavigationHeader(response.body()!!)
                     }
+
+                    showUpdateToast(true)
                 } else if (response.code() == 401) {
                     // User is not authenticated
                     logout()
@@ -239,6 +242,7 @@ class UserFragment : Fragment() {
                     val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                     // handle errors
                     handleUpdateErrors(errorResponse)
+                    showUpdateToast(false)
                 }
             }
 
@@ -247,6 +251,24 @@ class UserFragment : Fragment() {
                 logout()
             }
         })
+    }
+
+    /**
+     * Show update toast to alert user of successful update
+     */
+    private fun showUpdateToast(success: Boolean = true) {
+        var message = ""
+        message = if(success) {
+            resources.getString(R.string.updated_successful)
+        } else {
+            resources.getString(R.string.updated_successful)
+        }
+
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**

@@ -6,6 +6,8 @@
     <string name="edit_password">Palavra-passe:</string>
     <string name="edit_action">Editar</string>
     <string name="edit_delete_action">Eliminar conta</string>
+    <string name="updated_successful">Perfil atualizado com sucesso!</string>
+    <string name="updated_failed">Ocorreu um erro ao atualizar o perfil.</string>
 
     <!--  Delete user dialog  -->
     <string name="delete_dialog_title">Eliminar conta</string>
