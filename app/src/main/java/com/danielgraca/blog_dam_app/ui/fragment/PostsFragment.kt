@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
@@ -31,6 +32,7 @@ class PostsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferencesUtils
     private lateinit var posts_overlay: RelativeLayout
+    private lateinit var swipeRefresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
     // Initialize variables
     private var page: Int = 1
@@ -68,6 +70,21 @@ class PostsFragment : Fragment() {
 
         // Get reference to recycler view
         recyclerView = requireActivity().findViewById(R.id.rv_posts)
+
+        // Set swipe to refresh component
+        val swipeRefresh = requireActivity().findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+
+        swipeRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            // Reset page
+            page = 1
+            // Set fetching to true
+            fetching = true
+
+            // Get posts
+            getPosts(page)
+            // Stop refreshing
+            swipeRefresh.isRefreshing = false
+        })
 
         // Get posts
         getPosts(page)

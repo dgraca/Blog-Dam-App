@@ -60,4 +60,7 @@ dependencies {
     // Picasso for image loading
     implementation("com.squareup.picasso:picasso:2.8")
 
+    // Swipe to refresh
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
 }

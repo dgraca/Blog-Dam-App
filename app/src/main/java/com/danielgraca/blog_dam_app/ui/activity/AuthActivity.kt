@@ -164,6 +164,7 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun goToMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     /**

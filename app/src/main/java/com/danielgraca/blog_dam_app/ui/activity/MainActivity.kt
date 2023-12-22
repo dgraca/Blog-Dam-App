@@ -1,11 +1,7 @@
 package com.danielgraca.blog_dam_app.ui.activity
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.content.res.Configuration
-import android.graphics.PorterDuff
 import android.os.Bundle
-import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.UserEditResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
@@ -25,6 +22,7 @@ import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 /**
  * Main activity
@@ -82,6 +80,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here
         when (item.itemId) {
             R.id.navigation_home -> {
+                // if fragment is already the home fragment, do nothing
+                if (supportFragmentManager.findFragmentById(R.id.fragment_container) is PostsFragment) {
+                    // close navigation drawer
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    return false
+                }
                 replaceFragment(PostsFragment())
             }
             R.id.navigation_user -> {
@@ -92,6 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.navigation_logout -> {
                 logout()
+                finish()
             }
         }
 
