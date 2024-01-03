@@ -13,6 +13,7 @@
     <string name="image_required">É obrigatório tirar uma fotografia</string>
     <string name="post_created">Publicação criada com sucesso</string>
     <string name="post_not_created">Não foi possível criar a publicação</string>
+    <string name="image_too_large">Não foi possível enviar a imagem.</string>
 
     <!--  Delete user dialog  -->
     <string name="delete_dialog_post_title">Eliminar publicação</string>

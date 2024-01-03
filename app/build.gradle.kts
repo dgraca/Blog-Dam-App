@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.danielgraca.blog_dam_app"
-        minSdk = 26
+        minSdk = 29
         targetSdk = 33
         versionCode = 7
         versionName = "1.0.3"

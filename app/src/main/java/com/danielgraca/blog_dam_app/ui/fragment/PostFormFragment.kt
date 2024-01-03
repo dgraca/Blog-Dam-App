@@ -4,8 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +17,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostResponse
@@ -33,7 +38,9 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class PostFormFragment : Fragment() {
@@ -46,6 +53,9 @@ class PostFormFragment : Fragment() {
     private lateinit var ivPostImageForm: ImageView
     private lateinit var sharedPreferences: SharedPreferencesUtils
     private lateinit var create_post_overlay: RelativeLayout
+
+    // photo path for the image
+    private lateinit var currentPhotoPath: String
 
     private var loading: Boolean = false
 
@@ -92,16 +102,60 @@ class PostFormFragment : Fragment() {
      */
     private fun capturePhoto() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        resultLauncher.launch(cameraIntent)
+
+        // Ensure that there's a camera activity to handle the intent
+        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null) {
+            // Create the File where the photo should go
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                // Error occurred while creating the File
+                ex.printStackTrace()
+                null
+            }
+
+            // Continue only if the File was successfully created
+            photoFile?.let {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.danielgraca.blog_dam_app.fileprovider",
+                    it
+                )
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                resultLauncher.launch(cameraIntent)
+            }
+        }
     }
+
+    /**
+     * Create an image file to save the captured photo
+     *
+     * From the official documentation:
+     * https://developer.android.com/training/camera-deprecated/photobasics
+     */
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
 
     /**
      * Handles the result of the camera intent
      */
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            ivPostImageForm.setImageBitmap(data?.extras?.get("data") as Bitmap)
+            // Load the full-size image into the ImageView using the file path
+            ivPostImageForm.setImageURI(Uri.parse(currentPhotoPath))
         }
     }
 
@@ -144,6 +198,9 @@ class PostFormFragment : Fragment() {
         call?.enqueue(object : Callback<PostResponse?> {
             override fun onResponse(call: Call<PostResponse?>, response: Response<PostResponse?>) {
                 hideSpinner()
+
+                Log.d("DEBUG", response.toString())
+
                 // If the request is successful
                 if (response.isSuccessful) {
                     // Return to posts fragment
@@ -155,6 +212,15 @@ class PostFormFragment : Fragment() {
                         requireContext(),
                         R.string.post_created,
                         Toast.LENGTH_SHORT
+                    ).show()
+                }
+                // if image is too large
+                else if (response.code() == 413) {
+                    // Show error message
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.image_too_large,
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }
