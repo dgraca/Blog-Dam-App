@@ -107,26 +107,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     /**
-     * Called when an item in the navigation menu is selected
+     * Called when the user presses the back button
+     */
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+        // If the navigation drawer is open, close it
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else if (fragment is PostsFragment) {
+            // If the current fragment is the home fragment, close the app
+            finish()
+        } else {
+            // If the current fragment is not the home fragment, go back on the fragment stack
+            super.onBackPressed()
+        }
+    }
+
+
+
+    /**
+     * Replaces the current fragment with the provided fragment and adds it to the back stack
      */
     private fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null) // Add the transaction to the back stack
         transaction.commit()
-    }
-
-    /**
-     * Called when an item in the navigation menu is selected
-     */
-    override fun onBackPressed() {
-        super.onBackPressed()
-
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            // Close navigation drawer
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            onBackPressedDispatcher.onBackPressed()
-        }
     }
 
     /**

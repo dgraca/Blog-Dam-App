@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
@@ -74,6 +75,7 @@ class PostListAdapter(
         val postDetailFragment = PostDetailFragment.newInstance(id)
         val transaction = activity.supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, postDetailFragment)
+        transaction.addToBackStack(null) // Add the transaction to the back stack
         transaction.commit()
     }
 
@@ -81,7 +83,7 @@ class PostListAdapter(
      * Returns the number of posts
      */
     override fun getItemCount(): Int {
-        return posts!!.size
+        return posts?.size ?: 0
     }
 
     /**

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.fragment.app.FragmentManager
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.AuthorResponse
 import com.danielgraca.blog_dam_app.model.response.ErrorResponse
@@ -197,6 +198,10 @@ class PostDetailFragment(postId: Int) : Fragment() {
      */
     private fun goToPostsFragment(message: String) {
         val fragmentManager = requireActivity().supportFragmentManager
+        // Clear back stack
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        // Go to posts fragment
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, PostsFragment())
         transaction.commit()

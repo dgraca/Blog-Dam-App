@@ -95,6 +95,8 @@ class PostFormFragment : Fragment() {
         // Set click listeners
         btnPhotoForm.setOnClickListener { capturePhoto() }
         btnSendForm.setOnClickListener { createPost() }
+
+        currentPhotoPath = ""
     }
 
     /**
@@ -214,8 +216,8 @@ class PostFormFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                // if image is too large
-                else if (response.code() == 413) {
+                // if image is too large or unprocessable content
+                else if (response.code() == 413 || response.code() == 422) {
                     // Show error message
                     Toast.makeText(
                         requireContext(),

@@ -48,7 +48,14 @@ class PostsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posts, container, false)
+        val view = inflater.inflate(R.layout.fragment_posts, container, false)
+
+        // Get reference to recycler view
+        recyclerView = view.findViewById(R.id.rv_posts)
+
+        configureRecyclerView()
+
+        return view
     }
 
     /**
@@ -72,22 +79,19 @@ class PostsFragment : Fragment() {
         recyclerView = requireActivity().findViewById(R.id.rv_posts)
 
         // Set swipe to refresh component
-        val swipeRefresh = requireActivity().findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+        swipeRefresh = requireActivity().findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipe_refresh_layout)
 
         swipeRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-            // Reset page
-            page = 1
-            // Set fetching to true
-            fetching = true
-
-            // Get posts
-            getPosts(page)
+            reset()
             // Stop refreshing
             swipeRefresh.isRefreshing = false
         })
 
         // Get posts
         getPosts(page)
+
+        // Set adapter for the RecyclerView
+        recyclerView.adapter = PostListAdapter(requireContext(), requireActivity())
 
         // Set scroll listener to recycler view
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -97,11 +101,41 @@ class PostsFragment : Fragment() {
 
                 // If the user is at the bottom of the recycler view
                 if (fetching && !loading && !recyclerView.canScrollVertically(1)) {
+                    // Increment page
+                    this@PostsFragment.page += 1
                     // Get posts with next page
                     getPosts(page)
                 }
             }
         })
+    }
+
+    private fun reset() {
+        // Reset page
+        page = 1
+
+        // Set fetching to true
+        fetching = true
+
+        // Initialize or clear posts
+        if (allPosts == null) {
+            allPosts = mutableListOf()
+        } else {
+            allPosts?.clear()
+        }
+
+        // Clear adapter
+        recyclerView.adapter?.let {
+            (it as PostListAdapter).setPosts(allPosts)
+        }
+
+        // Get posts
+        getPosts(page)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        reset()
     }
 
     /**
@@ -129,9 +163,7 @@ class PostsFragment : Fragment() {
                     }
 
                     // Check if there are more posts to be fetched
-                    if (response.body()?.currentPage!! >= response.body()?.lastPage!!) {
-                        fetching = false
-                    }
+                    fetching = response.body()?.currentPage!! < response.body()?.lastPage!!
 
                     // prepare posts (add them to an existing list or create a new one)
                     preparePosts(response)
@@ -185,17 +217,12 @@ class PostsFragment : Fragment() {
             // This way the user knows that there are more posts
             recyclerView.smoothScrollBy(0, 800)
         }
-
-        // Increment page
-        this@PostsFragment.page = requestPage + 1
     }
 
     /**
      * Configure posts to be shown in the view
      */
     private fun configureRecyclerView() {
-        // Set adapter which will handle the posts with it's item clicker listener
-        recyclerView.adapter = PostListAdapter(requireContext(), requireActivity())
         // Set layout manager which will handle the posts' layout in the view
         val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         // Set layout manager to recycler view
@@ -229,13 +256,12 @@ class PostsFragment : Fragment() {
     }
 
     /**
-     * Go to post details
-     *
-     * @param id The post's id
+     * Go to post form
      */
     private fun goToPostForm() {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, PostFormFragment())
+        transaction.addToBackStack(null) // Add the transaction to the back stack
         transaction.commit()
     }
 
