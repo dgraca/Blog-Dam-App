@@ -53,7 +53,11 @@ class PostsFragment : Fragment() {
         // Get reference to recycler view
         recyclerView = view.findViewById(R.id.rv_posts)
 
-        configureRecyclerView()
+        // Initialize the adapter
+        val adapter = PostListAdapter(requireContext(), requireActivity())
+
+        // Set the adapter to the RecyclerView
+        recyclerView.adapter = adapter
 
         return view
     }

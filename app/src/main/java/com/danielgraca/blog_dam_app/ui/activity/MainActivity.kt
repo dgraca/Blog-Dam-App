@@ -178,6 +178,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun goToAuthActivity() {
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     /**

@@ -198,8 +198,6 @@ class PostDetailFragment(postId: Int) : Fragment() {
      */
     private fun goToPostsFragment(message: String) {
         val fragmentManager = requireActivity().supportFragmentManager
-        // Clear back stack
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         // Go to posts fragment
         val transaction = fragmentManager.beginTransaction()
