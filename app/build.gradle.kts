@@ -57,10 +57,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 
-    // Picasso for image loading
-    implementation("com.squareup.picasso:picasso:2.8")
+    // Glide for image loading and compression
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     // Swipe to refresh
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
-
 }

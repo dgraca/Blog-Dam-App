@@ -11,12 +11,12 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.PostListResponse
 import com.danielgraca.blog_dam_app.model.response.PostResponse
 import com.danielgraca.blog_dam_app.retrofit.RetrofitInitializer
 import com.danielgraca.blog_dam_app.ui.fragment.PostDetailFragment
-import com.squareup.picasso.Picasso
 
 /**
  * Adapter for the post list
@@ -115,8 +115,13 @@ class PostListAdapter(
             authorName.text = post?.author?.name
             body.text = post?.truncatedBody
 
-            // Set image using Picasso library
-            Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + post?.image?.toUri()).into(image)
+            // Set image using Glide library with compression and resizing
+            Glide.with(itemView)
+                .asBitmap()
+                .load(RetrofitInitializer().getBaseUrl() + "storage/" + post?.image?.toUri())
+                .encodeQuality(80)
+                .centerCrop()
+                .into(image)
         }
     }
 }

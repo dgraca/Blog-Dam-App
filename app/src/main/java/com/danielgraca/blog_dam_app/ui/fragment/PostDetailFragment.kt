@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.danielgraca.blog_dam_app.R
 import com.danielgraca.blog_dam_app.model.response.AuthorResponse
 import com.danielgraca.blog_dam_app.model.response.ErrorResponse
@@ -26,7 +27,6 @@ import com.danielgraca.blog_dam_app.ui.activity.AuthActivity
 import com.danielgraca.blog_dam_app.utils.SharedPreferencesUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -239,11 +239,16 @@ class PostDetailFragment(postId: Int) : Fragment() {
                     tvPostDetailAuthorName.text = response.body()?.author?.name
                     tvPostDetailBody.text = response.body()?.body
 
-                    // Set image using Picasso library
-                    Picasso.get().load(RetrofitInitializer().getBaseUrl() + "storage/" + response.body()?.image?.toUri()).into(ivPostDetailImage)
+                    // Set image using Glide library with compression and resizing
+                    Glide.with(requireContext())
+                        .asBitmap()
+                        .load(RetrofitInitializer().getBaseUrl() + "storage/" + response.body()?.image?.toUri())
+                        .encodeQuality(80)
+                        .centerCrop()
+                        .into(ivPostDetailImage)
                 } else if (response.code() == 401) {
                     // User is not authenticated
-                    // logout()
+                     logout()
                 }
             }
 

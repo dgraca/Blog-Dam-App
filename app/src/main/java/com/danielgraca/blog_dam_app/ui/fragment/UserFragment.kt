@@ -147,6 +147,7 @@ class UserFragment : Fragment() {
                     logout()
                 } else if (response.code() == 401) {
                     // show error message
+                    logout()
                 }
             }
 
