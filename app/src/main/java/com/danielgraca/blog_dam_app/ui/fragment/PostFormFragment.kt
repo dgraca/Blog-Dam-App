@@ -43,6 +43,16 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
+/**
+ * ENUM class that represents the compression level for the image
+ * based on the file size
+ */
+enum class CompressionLevel(val maxFileSizeBytes: Long, val quality: Int) {
+    HIGH(10 * 1024 * 1024, 80),  // Below 10 MB, compress at 80%
+    MEDIUM(15 * 1024 * 1024, 70), // Between 10 MB and 15 MB, compress at 70%
+    LOW(Long.MAX_VALUE, 60)        // Above 15 MB, compress at 60%
+}
+
 class PostFormFragment : Fragment() {
     // Get UI elements
     private lateinit var tiPostFormTitle: TextInputLayout
@@ -100,34 +110,44 @@ class PostFormFragment : Fragment() {
     }
 
     /**
+     * Handles the result of the camera intent - with quality
+     */
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            // Load the full-size image into the ImageView using the file path
+            ivPostImageForm.setImageURI(Uri.parse(currentPhotoPath))
+        }
+    }
+
+    /**
      * Called when the user clicks the photo button
      */
     private fun capturePhoto() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-        // Ensure that there's a camera activity to handle the intent
-        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null) {
-            // Create the File where the photo should go
-            val photoFile: File? = try {
-                createImageFile()
-            } catch (ex: IOException) {
-                // Error occurred while creating the File
-                ex.printStackTrace()
-                null
-            }
+        // Create the File where the photo should go
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: IOException) {
+            // Error occurred while creating the File
+            ex.printStackTrace()
+            null
+        }
 
-            // Continue only if the File was successfully created
-            photoFile?.let {
-                val photoURI: Uri = FileProvider.getUriForFile(
-                    requireContext(),
-                    "com.danielgraca.blog_dam_app.fileprovider",
-                    it
-                )
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                resultLauncher.launch(cameraIntent)
-            }
+        // Continue only if the File was successfully created
+        photoFile?.let {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                requireContext(),
+                "com.danielgraca.blog_dam_app.fileprovider",
+                it
+            )
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+
+        // Launch the cameraIntent using resultLauncher
+        resultLauncher.launch(photoURI)
         }
     }
+
 
     /**
      * Create an image file to save the captured photo
@@ -150,16 +170,6 @@ class PostFormFragment : Fragment() {
         }
     }
 
-
-    /**
-     * Handles the result of the camera intent
-     */
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // Load the full-size image into the ImageView using the file path
-            ivPostImageForm.setImageURI(Uri.parse(currentPhotoPath))
-        }
-    }
 
     /**
      * Create a post with the given data
@@ -311,7 +321,11 @@ class PostFormFragment : Fragment() {
 
         // Convert bitmap to byte array
         val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
+
+        // Determine compression level based on file size
+        val compressionLevel = determineCompressionLevel(file.length())
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressionLevel.quality, bos)
         val bitmapData: ByteArray = bos.toByteArray()
 
         // Write the bytes in file
@@ -321,5 +335,16 @@ class PostFormFragment : Fragment() {
         fos.close()
 
         return file
+    }
+
+    /**
+     * Determines the compression level based on the file size
+     */
+    private fun determineCompressionLevel(fileSize: Long): CompressionLevel {
+        return when {
+            fileSize > CompressionLevel.HIGH.maxFileSizeBytes -> CompressionLevel.HIGH
+            fileSize > CompressionLevel.MEDIUM.maxFileSizeBytes -> CompressionLevel.MEDIUM
+            else -> CompressionLevel.LOW
+        }
     }
 }
