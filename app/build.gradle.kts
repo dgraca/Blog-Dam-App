@@ -11,8 +11,8 @@ android {
         applicationId = "com.danielgraca.blog_dam_app"
         minSdk = 29
         targetSdk = 33
-        versionCode = 12
-        versionName = "1.1.3"
+        versionCode = 13
+        versionName = "1.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

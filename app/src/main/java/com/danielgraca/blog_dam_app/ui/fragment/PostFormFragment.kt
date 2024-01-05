@@ -211,8 +211,6 @@ class PostFormFragment : Fragment() {
             override fun onResponse(call: Call<PostResponse?>, response: Response<PostResponse?>) {
                 hideSpinner()
 
-                Log.d("DEBUG", response.toString())
-
                 // If the request is successful
                 if (response.isSuccessful) {
                     // Return to posts fragment

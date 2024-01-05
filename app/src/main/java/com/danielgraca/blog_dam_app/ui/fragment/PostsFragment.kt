@@ -82,6 +82,11 @@ class PostsFragment : Fragment() {
         // Get reference to recycler view
         recyclerView = requireActivity().findViewById(R.id.rv_posts)
 
+        // Set layout manager which will handle the posts' layout in the view
+        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        // Set layout manager to recycler view
+        recyclerView.layoutManager = layoutManager
+
         // Set swipe to refresh component
         swipeRefresh = requireActivity().findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipe_refresh_layout)
 
@@ -91,8 +96,16 @@ class PostsFragment : Fragment() {
             swipeRefresh.isRefreshing = false
         })
 
-        // Get posts
-        getPosts(page)
+        /**
+         * Reset variables and get posts
+         *
+         * Why do i call reset when it's the first time?
+         * Well, when the user loads the first time, nothing wrong would happen without this piece of code
+         * being called. However, when the user loads another page and clicks on a post, and then come back
+         * again, the view is created but not reset. This means that the page is not reset, and the user
+         * will be able to scroll down and fetch the same posts again, leading to duplicated posts.
+         */
+        reset()
 
         // Set adapter for the RecyclerView
         recyclerView.adapter = PostListAdapter(requireContext(), requireActivity())
@@ -122,18 +135,13 @@ class PostsFragment : Fragment() {
         fetching = true
 
         // Initialize or clear posts
-        if (allPosts == null) {
-            allPosts = mutableListOf()
-        } else {
-            allPosts?.clear()
-        }
+        allPosts?.clear()
 
-        // Clear adapter
+        // Set the empty list of posts to the adapter
         recyclerView.adapter?.let {
             (it as PostListAdapter).setPosts(allPosts)
         }
 
-        // Get posts
         getPosts(page)
     }
 
@@ -201,7 +209,6 @@ class PostsFragment : Fragment() {
 
         // If it's the first page, create a new list
         if (requestPage == 1) {
-            configureRecyclerView()
             allPosts = mutableListOf()
         }
 
@@ -221,16 +228,6 @@ class PostsFragment : Fragment() {
             // This way the user knows that there are more posts
             recyclerView.smoothScrollBy(0, 800)
         }
-    }
-
-    /**
-     * Configure posts to be shown in the view
-     */
-    private fun configureRecyclerView() {
-        // Set layout manager which will handle the posts' layout in the view
-        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        // Set layout manager to recycler view
-        recyclerView.layoutManager = layoutManager
     }
 
     /**
